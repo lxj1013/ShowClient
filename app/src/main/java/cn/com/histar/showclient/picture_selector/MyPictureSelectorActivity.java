@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -21,7 +23,7 @@ import java.util.List;
 import cn.com.histar.showclient.R;
 import cn.com.histar.showclient.picture_selector.adapter.GridImageAdapter;
 
-public class MyPictureSelectorActivity extends AppCompatActivity {
+public class MyPictureSelectorActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "MyPictureSelector";
 
@@ -35,6 +37,7 @@ public class MyPictureSelectorActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GridImageAdapter adapter;
     private ImageView left_back;
+    private TextView sendTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class MyPictureSelectorActivity extends AppCompatActivity {
     private void init() {
         recyclerView = findViewById(R.id.picture_select_rv);
         left_back = findViewById(R.id.picture_select_back_iv);
+        sendTv = findViewById(R.id.picture_select_bottom_send_tv);
 
         selectList = PictureSelector.obtainMultipleResult(getIntent());
 
@@ -112,12 +116,8 @@ public class MyPictureSelectorActivity extends AppCompatActivity {
             }
         });
 
-        left_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        left_back.setOnClickListener(this);
+        sendTv.setOnClickListener(this);
 
     }
 
@@ -135,6 +135,18 @@ public class MyPictureSelectorActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.picture_select_back_iv:
+                finish();
+                break;
+            case R.id.picture_select_bottom_send_tv:
+                Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

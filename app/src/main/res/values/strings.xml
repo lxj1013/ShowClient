@@ -17,4 +17,5 @@
     <string name="title_settings_str">System settings</string>
     <string name="title_help_str">Help</string>
     <string name="title_about_str">About</string>
+    <string name="picture_send">Send</string>
 </resources>

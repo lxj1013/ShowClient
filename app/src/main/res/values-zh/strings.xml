@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ShowClient</string>
+
+    <string name="add_tb_str">添加</string>
+    <string name="nav_program_str">节目</string>
+    <string name="nav_mould_str">模板</string>
+    <string name="nav_settings_str">设置</string>
+    <string name="nav_help_str">帮助</string>
+    <string name="nav_about_str">关于</string>
+
+    <string name="header_user_name_str">Li</string>
+
+
+    <string name="title_add_str">编辑新节目</string>
+    <string name="title_program_str">节目</string>
+    <string name="title_mould_str">所有模板</string>
+    <string name="title_settings_str">设置</string>
+    <string name="title_help_str">帮助</string>
+    <string name="title_about_str">关于</string>
+    <string name="picture_send">发送</string>
+</resources>

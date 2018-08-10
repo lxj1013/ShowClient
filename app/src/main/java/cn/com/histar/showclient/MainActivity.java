@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                intent.addCategory(Intent.CATEGORY_OPENABLE);
 //                startActivityForResult(intent, 1);
 
-                Toast.makeText(this, "Add", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Add", Toast.LENGTH_SHORT).show();
                 break;
             case android.R.id.home:
                 Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
