@@ -22,8 +22,9 @@ import java.util.List;
 
 import cn.com.histar.showclient.R;
 import cn.com.histar.showclient.picture_selector.adapter.GridImageAdapter;
+import cn.com.histar.showclient.service.FileSendService;
 
-public class MyPictureSelectorActivity extends AppCompatActivity implements View.OnClickListener{
+public class MyPictureSelectorActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MyPictureSelector";
 
@@ -140,12 +141,20 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.picture_select_back_iv:
                 finish();
                 break;
             case R.id.picture_select_bottom_send_tv:
                 Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < selectList.size(); i++) {
+                    String file_path = selectList.get(i).getPath();
+                    String dstPath = "/histarProgram/mainScreen";
+                    String name = (i + 1) + file_path.substring(file_path.lastIndexOf("."), file_path.length());
+                    FileSendService.startActionSend(MyPictureSelectorActivity.this, "14563", "192.168.43.1", name, file_path, dstPath);
+
+                    Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
+                }
                 break;
         }
     }

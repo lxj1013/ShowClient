@@ -28,6 +28,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".picture_selector.MyPictureSelectorActivity"></activity>
+        <service
+            android:name=".service.FileSendService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
