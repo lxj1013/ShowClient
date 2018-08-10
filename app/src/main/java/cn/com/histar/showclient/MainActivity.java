@@ -1,9 +1,8 @@
 package cn.com.histar.showclient;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,16 +14,28 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.permissions.RxPermissions;
+import com.luck.picture.lib.tools.PictureFileUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.com.histar.showclient.about.AboutFragment;
 import cn.com.histar.showclient.help.HelpFragment;
 import cn.com.histar.showclient.mould.MouldFragment;
+import cn.com.histar.showclient.picture_selector.MyPictureSelectorActivity;
 import cn.com.histar.showclient.program.ProgramFragment;
 import cn.com.histar.showclient.settings.SettingsFragment;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -62,11 +73,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private List<LocalMedia> selectList = new ArrayList<>();
+    private void openPictureSelector(){
+
+        // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
+        RxPermissions permissions = new RxPermissions(this);
+        permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                if (aBoolean) {
+                    PictureFileUtils.deleteCacheDirFile(MainActivity.this);
+                } else {
+                    Toast.makeText(MainActivity.this,
+                            getString(R.string.picture_jurisdiction), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+
+        PictureSelector.create(MainActivity.this)
+                .openGallery(PictureMimeType.ofAll())
+                .theme(R.style.picture_QQ_style)
+                .maxSelectNum(10)
+                .minSelectNum(1)
+                .selectionMode(PictureConfig.MULTIPLE)
+                .previewImage(true)
+                .previewVideo(true)
+//                    .enablePreviewAudio(false) // 是否可播放音频
+//                    .isCamera(true)
+//                    .enableCrop(false)
+//                    .compress(false)
+                .glideOverride(160, 160)
+                .previewEggs(true)
+//                    .withAspectRatio(1, 1)
+//                    .hideBottomControls(true)
+//                    .isGif(false)
+//                    .freeStyleCropEnabled(true)
+//                    .circleDimmedLayer(false)
+//                    .showCropFrame(false)
+//                    .showCropGrid(false)
+                .openClickSound(true)
+                .selectionMedia(selectList)
+                .forResult(PictureConfig.CHOOSE_REQUEST);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.main_add:
+                openPictureSelector();
 //                mainToolbar.setTitle(getResources().getString(R.string.title_add_str));
 
 //                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -125,12 +192,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 1) {
-                Uri uri = data.getData();
-                Toast.makeText(this, "文件路径：" + uri.getPath().toString(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "onActivityResult: " + "文件路径：" + uri.getPath().toString());
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片选择
+//                    selectList = PictureSelector.obtainMultipleResult(data);
+//                    for (int i = 0; i < selectList.size(); i++)
+//                        Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
+                    data.setClass(MainActivity.this,MyPictureSelectorActivity.class);
+                    startActivity(data);
+                    break;
             }
         }
     }
