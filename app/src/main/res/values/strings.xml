@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ShowClient</string>
+
+    <string name="add_tb_str">add</string>
+    <string name="nav_program_str">Program</string>
+    <string name="nav_mould_str">Mould</string>
+    <string name="nav_settings_str">Settings</string>
+    <string name="nav_help_str">Help</string>
+    <string name="nav_about_str">About</string>
+
+    <string name="header_user_name_str">Li</string>
+
+
+    <string name="title_add_str">Edit new program</string>
+    <string name="title_program_str">Your program</string>
+    <string name="title_mould_str">All mould</string>
+    <string name="title_settings_str">System settings</string>
+    <string name="title_help_str">Help</string>
+    <string name="title_about_str">About</string>
+</resources>
