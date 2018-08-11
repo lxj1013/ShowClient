@@ -1,7 +1,9 @@
 package cn.com.histar.showclient.picture_selector;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -78,6 +80,8 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
         }
     };
 
+
+
     private void init() {
         recyclerView = findViewById(R.id.picture_select_rv);
         left_back = findViewById(R.id.picture_select_back_iv);
@@ -150,12 +154,20 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
                 for (int i = 0; i < selectList.size(); i++) {
                     String file_path = selectList.get(i).getPath();
                     String dstPath = "/histarProgram/mainScreen";
-                    String name = (i + 1) + file_path.substring(file_path.lastIndexOf("."), file_path.length());
+                    String name = getTime() + file_path.substring(file_path.lastIndexOf("."), file_path.length());
                     FileSendService.startActionSend(MyPictureSelectorActivity.this, "14563", "192.168.43.1", name, file_path, dstPath);
 
                     Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
                 }
                 break;
         }
+
+    }
+
+    private String getTime() {
+//        long timeStampSec = System.currentTimeMillis() / 1000;
+//        @SuppressLint("DefaultLocale") String timestamp = String.format("%010d", timeStampSec);
+//        return timestamp;
+        return String.valueOf(System.currentTimeMillis());
     }
 }
