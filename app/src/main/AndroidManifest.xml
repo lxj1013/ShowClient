@@ -20,16 +20,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="cn.com.hisistar.showclient.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".picture_selector.MyPictureSelectorActivity"></activity>
+        <activity android:name="cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity"></activity>
         <service
-            android:name=".service.FileSendService"
+            android:name="cn.com.hisistar.showclient.service.FileSendService"
             android:exported="false"></service>
     </application>
 

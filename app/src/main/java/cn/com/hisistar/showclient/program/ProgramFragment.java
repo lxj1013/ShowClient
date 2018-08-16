@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.program;
+package cn.com.hisistar.showclient.program;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 

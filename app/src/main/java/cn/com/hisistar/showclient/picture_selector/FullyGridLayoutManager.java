@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.picture_selector;
+package cn.com.hisistar.showclient.picture_selector;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;

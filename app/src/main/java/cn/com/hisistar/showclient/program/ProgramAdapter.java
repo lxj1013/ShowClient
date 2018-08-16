@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.program;
+package cn.com.hisistar.showclient.program;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;

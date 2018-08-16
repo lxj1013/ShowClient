@@ -1,4 +1,4 @@
-package cn.com.histar.showclient;
+package cn.com.hisistar.showclient;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,12 +28,13 @@ import com.luck.picture.lib.tools.PictureFileUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.com.histar.showclient.about.AboutFragment;
-import cn.com.histar.showclient.help.HelpFragment;
-import cn.com.histar.showclient.mould.MouldFragment;
-import cn.com.histar.showclient.picture_selector.MyPictureSelectorActivity;
-import cn.com.histar.showclient.program.ProgramFragment;
-import cn.com.histar.showclient.settings.SettingsFragment;
+import cn.com.hisistar.showclient.about.AboutFragment;
+import cn.com.hisistar.showclient.help.HelpFragment;
+import cn.com.hisistar.showclient.mould.MouldFragment;
+import cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity;
+import cn.com.hisistar.showclient.program.ProgramFragment;
+import cn.com.hisistar.showclient.settings.SettingsFragment;
+import cn.com.histar.showclient.R;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 

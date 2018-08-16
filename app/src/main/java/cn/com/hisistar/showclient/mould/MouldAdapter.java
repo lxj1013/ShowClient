@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.mould;
+package cn.com.hisistar.showclient.mould;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import cn.com.histar.showclient.R;
-import cn.com.histar.showclient.mould.Mould;
 
 public class MouldAdapter extends RecyclerView.Adapter<MouldAdapter.ViewHolder> {
 

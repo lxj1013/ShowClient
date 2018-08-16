@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.settings;
+package cn.com.hisistar.showclient.settings;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.mould;
+package cn.com.hisistar.showclient.mould;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,13 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import cn.com.histar.showclient.R;
-import cn.com.histar.showclient.mould.Mould;
 
 public class MouldFragment extends Fragment {
 

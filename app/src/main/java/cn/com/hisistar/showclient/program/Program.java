@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.program;
+package cn.com.hisistar.showclient.program;
 
 public class Program {
     private String programName;

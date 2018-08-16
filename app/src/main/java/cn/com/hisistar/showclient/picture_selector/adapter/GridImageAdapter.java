@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.picture_selector.adapter;
+package cn.com.hisistar.showclient.picture_selector.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

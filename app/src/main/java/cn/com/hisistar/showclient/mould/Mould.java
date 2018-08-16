@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.mould;
+package cn.com.hisistar.showclient.mould;
 
 public class Mould {
     private String mouldName;

@@ -1,9 +1,7 @@
-package cn.com.histar.showclient.picture_selector;
+package cn.com.hisistar.showclient.picture_selector;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,12 +17,14 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.com.hisistar.showclient.FileTransfer;
 import cn.com.histar.showclient.R;
-import cn.com.histar.showclient.picture_selector.adapter.GridImageAdapter;
-import cn.com.histar.showclient.service.FileSendService;
+import cn.com.hisistar.showclient.picture_selector.adapter.GridImageAdapter;
+import cn.com.hisistar.showclient.service.FileSendService;
 
 public class MyPictureSelectorActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -79,7 +79,6 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
                     .forResult(PictureConfig.CHOOSE_REQUEST);
         }
     };
-
 
 
     private void init() {
@@ -151,14 +150,27 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
                 break;
             case R.id.picture_select_bottom_send_tv:
                 Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
+                String dstPath = "/histarProgram/mainScreen";
+
+                if (selectList.isEmpty()) {
+                    return;
+                }
+                List<FileTransfer> fileTransferList = new ArrayList<>();
                 for (int i = 0; i < selectList.size(); i++) {
                     String file_path = selectList.get(i).getPath();
-                    String dstPath = "/histarProgram/mainScreen";
-                    String name = getTime() + file_path.substring(file_path.lastIndexOf("."), file_path.length());
-                    FileSendService.startActionSend(MyPictureSelectorActivity.this, "14563", "192.168.43.1", name, file_path, dstPath);
-
-                    Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
+                    String name = getTime() + i + file_path.substring(file_path.lastIndexOf("."), file_path.length());
+                    fileTransferList.add(new FileTransfer(name, file_path, dstPath, new File(file_path).length()));
                 }
+
+                FileSendService.startActionSend(MyPictureSelectorActivity.this, fileTransferList);
+//                for (int i = 0; i < selectList.size(); i++) {
+//                    String file_path = selectList.get(i).getPath();
+//                    String dstPath = "/histarProgram/mainScreen";
+//                    String name = getTime() + file_path.substring(file_path.lastIndexOf("."), file_path.length());
+//                    FileSendService.startActionSend(MyPictureSelectorActivity.this, "14563", "192.168.43.1", name, file_path, dstPath);
+//
+//                    Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
+//                }
                 break;
         }
 

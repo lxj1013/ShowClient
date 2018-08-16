@@ -1,4 +1,4 @@
-package cn.com.histar.showclient.about;
+package cn.com.hisistar.showclient.help;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,8 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class AboutFragment extends Fragment {
-
+public class HelpFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
