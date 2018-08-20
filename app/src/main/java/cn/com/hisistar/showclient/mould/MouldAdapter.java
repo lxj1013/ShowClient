@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -54,7 +56,8 @@ public class MouldAdapter extends RecyclerView.Adapter<MouldAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Mould mould = mMouldList.get(position);
         holder.mMouldTv.setText(mould.getMouldName());
-        Glide.with(mContext).load(mould.getMouldId()).into(holder.mMouldIv);
+        RequestOptions requestOptions = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
+        Glide.with(mContext).load(mould.getMouldId()).apply(requestOptions).into(holder.mMouldIv);
     }
 
 

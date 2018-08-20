@@ -18,8 +18,7 @@ import cn.com.histar.showclient.R;
 
 public class MouldFragment extends Fragment {
 
-    private Mould[] mMoulds = {new Mould("Mould one", R.drawable.landscape_mould_one)
-            , new Mould("Mould two", R.drawable.landscape_mould_two)};
+    private Mould[] mMoulds;
 
     private List<Mould> mMouldList = new ArrayList<>();
     private MouldAdapter mAdapter;
@@ -36,8 +35,22 @@ public class MouldFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        mMoulds = new Mould[]{
+                new Mould(getResources().getString(R.string.landscape_mould_one), R.drawable.landscape_mould_one),
+                new Mould(getResources().getString(R.string.landscape_mould_two), R.drawable.landscape_mould_two),
+                new Mould(getResources().getString(R.string.landscape_mould_three), R.drawable.landscape_mould_three),
+                new Mould(getResources().getString(R.string.landscape_mould_four), R.drawable.landscape_mould_four),
 
+                new Mould(getResources().getString(R.string.portrait_mould_one), R.drawable.portrait_mould_one),
+                new Mould(getResources().getString(R.string.portrait_mould_two), R.drawable.portrait_mould_two),
+                new Mould(getResources().getString(R.string.portrait_mould_three), R.drawable.portrait_mould_three),
+                new Mould(getResources().getString(R.string.portrait_mould_four), R.drawable.portrait_mould_four)
+
+        };
 //        initMoulds();
+        if (!mMouldList.isEmpty()) {
+            mMouldList.clear();
+        }
         Collections.addAll(mMouldList, mMoulds);
 //        mMouldList.addAll(Arrays.asList(mMoulds));
         RecyclerView recyclerView = getActivity().findViewById(R.id.program_rv);

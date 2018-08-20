@@ -16,6 +16,7 @@ import java.io.File;
  * package：com.luck.picture.lib.config
  * email：893855882@qq.com
  * data：2017/5/24
+ *
  * @author luck
  */
 
@@ -60,6 +61,7 @@ public final class PictureMimeType {
             case "video/mpeg":
             case "video/webm":
             case "video/mp2ts":
+            case "video/mov":
                 return PictureConfig.TYPE_VIDEO;
             case "audio/mpeg":
             case "audio/x-ms-wma":
@@ -126,6 +128,7 @@ public final class PictureMimeType {
             case "video/mpeg":
             case "video/webm":
             case "video/mp2ts":
+            case "video/mov":
                 return true;
         }
         return false;
@@ -157,7 +160,7 @@ public final class PictureMimeType {
         if (file != null) {
             String name = file.getName();
             if (name.endsWith(".mp4") || name.endsWith(".avi")
-                    || name.endsWith(".3gpp") || name.endsWith(".3gp") || name.startsWith(".mov")) {
+                    || name.endsWith(".3gpp") || name.endsWith(".3gp") || name.endsWith(".mov")) {
                 return "video/mp4";
             } else if (name.endsWith(".PNG") || name.endsWith(".png") || name.endsWith(".jpeg")
                     || name.endsWith(".gif") || name.endsWith(".GIF") || name.endsWith(".jpg")

@@ -18,4 +18,13 @@
     <string name="title_help_str">帮助</string>
     <string name="title_about_str">关于</string>
     <string name="picture_send">发送</string>
+
+    <string name="landscape_mould_one">横屏模板一</string>
+    <string name="landscape_mould_two">横屏模板二</string>
+    <string name="landscape_mould_three">横屏模板三</string>
+    <string name="landscape_mould_four">横屏模板四</string>
+    <string name="portrait_mould_one">竖屏模板一</string>
+    <string name="portrait_mould_two">竖屏模板二</string>
+    <string name="portrait_mould_three">竖屏模板三</string>
+    <string name="portrait_mould_four">竖屏模板四</string>
 </resources>

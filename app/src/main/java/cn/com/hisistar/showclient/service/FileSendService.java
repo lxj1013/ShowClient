@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import java.io.BufferedReader;
@@ -44,6 +45,8 @@ public class FileSendService extends IntentService {
     private static final String EXTRA_SRC_PATH = "cn.com.histar.filereceivetest.extra.SRC.PATH";
     private static final String EXTRA_DST_PATH = "cn.com.histar.filereceivetest.extra.DST.PATH";
     private static final String EXTRA_MEDIA_LIST = "cn.com.histar.filereceivetest.extra.MEDIA.LIST";
+
+    private static int BUF_SIZE = 1024 * 10;
 
 
     private Socket socket;
@@ -184,19 +187,20 @@ public class FileSendService extends IntentService {
             objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(fileTransferList);
             Log.e(TAG, "handleActionSend: " + "writeObject");
-            buf = new byte[1024];
+            buf = new byte[BUF_SIZE];
             int len;
-
             for (int i = 0; i < fileTransferList.size(); i++) {
                 fileInputStream = new FileInputStream(new File(fileTransferList.get(i).getSrcFilePath()));
                 Log.e(TAG, "handleActionSend: " + fileTransferList.get(i).toString());
                 int size = 0;
+                int j = 0;
                 while ((len = fileInputStream.read(buf)) != -1) {
                     size += len;
+                    j++;
 //                    Log.e(TAG, "handleActionSend: " + "len = " + len + " size = " + size);
                     outputStream.write(buf, 0, len);
                 }
-                Log.e(TAG, "handleActionSend: " + "size=" + size);
+                Log.e(TAG, "handleActionSend: " + "size=" + size + " j=" + j);
 //                outputStream.flush();
             }
             socket.shutdownOutput();
@@ -206,7 +210,9 @@ public class FileSendService extends IntentService {
             Log.e(TAG, "handleActionSend: " + "backMsg = " + serverBack);
             clean();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Toast.makeText(this, "e.getMessage()", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "handleActionSend: " + e.getMessage());
             e.printStackTrace();
         }
     }

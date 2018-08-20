@@ -18,4 +18,13 @@
     <string name="title_help_str">Help</string>
     <string name="title_about_str">About</string>
     <string name="picture_send">Send</string>
+
+    <string name="landscape_mould_one">landscape_mould_one</string>
+    <string name="landscape_mould_two">landscape_mould_two</string>
+    <string name="landscape_mould_three">landscape_mould_three</string>
+    <string name="landscape_mould_four">landscape_mould_four</string>
+    <string name="portrait_mould_one">portrait_mould_one</string>
+    <string name="portrait_mould_two">portrait_mould_two</string>
+    <string name="portrait_mould_three">portrait_mould_three</string>
+    <string name="portrait_mould_four">portrait_mould_four</string>
 </resources>
