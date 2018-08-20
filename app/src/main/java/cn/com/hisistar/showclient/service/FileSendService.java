@@ -3,6 +3,8 @@ package cn.com.hisistar.showclient.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -55,6 +57,7 @@ public class FileSendService extends IntentService {
     private byte[] buf;
     private BufferedReader bufferedReader;
     private ObjectOutputStream objectOutputStream;
+    private Handler mHandler;
 
     public FileSendService() {
         super("FileSendService");
@@ -211,7 +214,17 @@ public class FileSendService extends IntentService {
             clean();
 
         } catch (Exception e) {
-            Toast.makeText(this, "e.getMessage()", Toast.LENGTH_SHORT).show();
+
+            final String eMessage = e.getMessage();
+            mHandler = new Handler(getMainLooper());
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),eMessage, Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
             Log.e(TAG, "handleActionSend: " + e.getMessage());
             e.printStackTrace();
         }

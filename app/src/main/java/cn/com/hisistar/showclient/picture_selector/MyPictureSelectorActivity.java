@@ -2,11 +2,15 @@ package cn.com.hisistar.showclient.picture_selector;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +34,7 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
 
     private static final String TAG = "MyPictureSelector";
 
-    private static final int MAX_SELECT_NUM = 10;
+    private static final int MAX_SELECT_NUM = 100;
     private static final int MIN_SELECT_NUM = 1;
     private static final int THEME_ID = R.style.picture_QQ_style;
     private static int PICTURE_MIME_TYPE = PictureMimeType.ofAll();
@@ -80,10 +84,22 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
         }
     };
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.picture_selector_toolbar, menu);
+        return true;
+    }
 
     private void init() {
+        Toolbar toolbar = findViewById(R.id.picture_select_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
         recyclerView = findViewById(R.id.picture_select_rv);
-        left_back = findViewById(R.id.picture_select_back_iv);
+//        left_back = findViewById(R.id.picture_select_back_iv);
         sendTv = findViewById(R.id.picture_select_bottom_send_tv);
 
         selectList = PictureSelector.obtainMultipleResult(getIntent());
@@ -120,7 +136,7 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
             }
         });
 
-        left_back.setOnClickListener(this);
+//        left_back.setOnClickListener(this);
         sendTv.setOnClickListener(this);
 
     }
@@ -145,9 +161,9 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.picture_select_back_iv:
-                finish();
-                break;
+//            case R.id.picture_select_back_iv:
+//                finish();
+//                break;
             case R.id.picture_select_bottom_send_tv:
                 Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
                 String dstPath = "/histarProgram/mainScreen";
@@ -182,4 +198,15 @@ public class MyPictureSelectorActivity extends AppCompatActivity implements View
 //        return timestamp;
         return String.valueOf(System.currentTimeMillis());
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return  super.onOptionsItemSelected(item);
+    }
+
 }

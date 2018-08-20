@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         PictureSelector.create(MainActivity.this)
                 .openGallery(PictureMimeType.ofAll())
                 .theme(R.style.picture_QQ_style)
-                .maxSelectNum(10)
+                .maxSelectNum(100)
                 .minSelectNum(1)
                 .selectionMode(PictureConfig.MULTIPLE)
                 .previewImage(true)

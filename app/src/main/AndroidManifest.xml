@@ -27,10 +27,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity"></activity>
+        <activity android:name="cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity"
+            android:label="@string/title_add_str">
+
+        </activity>
         <service
             android:name="cn.com.hisistar.showclient.service.FileSendService"
-            android:exported="false"></service>
+            android:exported="false">
+
+        </service>
     </application>
 
 </manifest>

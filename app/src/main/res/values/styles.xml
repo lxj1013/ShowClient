@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyAppTheme" parent="AppTheme"></style>
 
     <!--QQ数字风格样式，注意每一项都不能少-->
     <style name="picture.QQ.style" parent="Theme.AppCompat.Light.DarkActionBar">
