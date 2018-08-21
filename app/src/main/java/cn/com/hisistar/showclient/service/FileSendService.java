@@ -169,7 +169,7 @@ public class FileSendService extends IntentService {
         try {
             socket = new Socket();
             socket.bind(null);
-            socket.connect(new InetSocketAddress("192.168.43.1", 14563), 20000);
+            socket.connect(new InetSocketAddress("192.168.43.1", 14563), 10000);
             outputStream = socket.getOutputStream();
 //            outputStream.write(("" + "*" + "" + "*").getBytes());
 //            File file = new File("");
@@ -211,6 +211,14 @@ public class FileSendService extends IntentService {
             String serverBack = bufferedReader.readLine();
 
             Log.e(TAG, "handleActionSend: " + "backMsg = " + serverBack);
+            mHandler = new Handler(getMainLooper());
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),"Transfer completed!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
             clean();
 
         } catch (Exception e) {
@@ -220,7 +228,7 @@ public class FileSendService extends IntentService {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),eMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"failed to connect to target!", Toast.LENGTH_SHORT).show();
 
                 }
             });

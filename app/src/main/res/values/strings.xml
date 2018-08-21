@@ -12,11 +12,13 @@
 
 
     <string name="title_add_str">Edit new program</string>
+    <string name="title_choose_str">Choose A Mould</string>
     <string name="title_program_str">Your program</string>
     <string name="title_mould_str">All mould</string>
     <string name="title_settings_str">System settings</string>
     <string name="title_help_str">Help</string>
     <string name="title_about_str">About</string>
+
     <string name="picture_send">Send</string>
 
     <string name="landscape_mould_one">landscape_mould_one</string>

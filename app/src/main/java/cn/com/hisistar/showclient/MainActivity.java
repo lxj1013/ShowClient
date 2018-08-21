@@ -30,6 +30,7 @@ import java.util.List;
 
 import cn.com.hisistar.showclient.about.AboutFragment;
 import cn.com.hisistar.showclient.help.HelpFragment;
+import cn.com.hisistar.showclient.mould.MouldChooseFragment;
 import cn.com.hisistar.showclient.mould.MouldFragment;
 import cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity;
 import cn.com.hisistar.showclient.program.ProgramFragment;
@@ -75,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private List<LocalMedia> selectList = new ArrayList<>();
-    private void openPictureSelector(){
+
+    private void openPictureSelector() {
 
         // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
         RxPermissions permissions = new RxPermissions(this);
@@ -134,7 +136,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.main_add:
-                openPictureSelector();
+//                openPictureSelector();
+                replaceFragment(new MouldChooseFragment());
+                mainToolbar.setTitle(getResources().getString(R.string.title_choose_str));
+
+
 //                mainToolbar.setTitle(getResources().getString(R.string.title_add_str));
 
 //                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -202,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    selectList = PictureSelector.obtainMultipleResult(data);
 //                    for (int i = 0; i < selectList.size(); i++)
 //                        Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
-                    data.setClass(MainActivity.this,MyPictureSelectorActivity.class);
+                    data.setClass(MainActivity.this, MyPictureSelectorActivity.class);
                     startActivity(data);
                     break;
             }

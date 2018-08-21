@@ -40,15 +40,20 @@ public class MouldAdapter extends RecyclerView.Adapter<MouldAdapter.ViewHolder> 
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.program_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
-        holder.mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Mould mould = mMouldList.get(position);
-                Log.e(TAG, "onClick: position = " + position + "   " + mould.getMouldName());
-                Toast.makeText(mContext, "position = " + position + "   " + mould.getMouldName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (mItemClickListener != null) {
+            holder.mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = holder.getAdapterPosition();
+                    mItemClickListener.onItemClick(position, v);
+
+//                    Mould mould = mMouldList.get(position);
+//                    Log.e(TAG, "onClick: position = " + position + "   " + mould.getMouldName());
+//                    Toast.makeText(mContext, "position = " + position + "   " + mould.getMouldName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
         return holder;
     }
 
@@ -78,5 +83,15 @@ public class MouldAdapter extends RecyclerView.Adapter<MouldAdapter.ViewHolder> 
             mMouldIv = itemView.findViewById(R.id.program_image);
             mMouldTv = itemView.findViewById(R.id.program_name);
         }
+    }
+
+    private OnItemClickListener mItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, View v);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mItemClickListener = listener;
     }
 }

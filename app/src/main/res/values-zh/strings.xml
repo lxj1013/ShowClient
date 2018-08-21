@@ -12,6 +12,7 @@
 
 
     <string name="title_add_str">编辑新节目</string>
+    <string name="title_choose_str">选择模板</string>
     <string name="title_program_str">节目</string>
     <string name="title_mould_str">所有模板</string>
     <string name="title_settings_str">设置</string>

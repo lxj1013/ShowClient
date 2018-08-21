@@ -213,7 +213,7 @@ public class GridImageAdapter extends
         }
     }
 
-    protected OnItemClickListener mItemClickListener;
+    private OnItemClickListener mItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position, View v);
