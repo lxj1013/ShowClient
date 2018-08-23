@@ -28,4 +28,11 @@
     <string name="portrait_mould_two">竖屏模板二</string>
     <string name="portrait_mould_three">竖屏模板三</string>
     <string name="portrait_mould_four">竖屏模板四</string>
+
+    <string name="program_screen_main">主屏</string>
+    <string name="program_screen_two">屏二</string>
+    <string name="program_screen_three">屏三</string>
+    <string name="program_screen_four">屏四</string>
+    <string name="program_music">音乐</string>
+    <string name="program_subtitle">字幕</string>
 </resources>

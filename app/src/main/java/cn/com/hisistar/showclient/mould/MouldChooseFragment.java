@@ -29,13 +29,14 @@ public class MouldChooseFragment extends Fragment {
 
     public static final String MOULD_NAME = "mould_name";
     public static final String MOULD_IMAGE_ID = "mould_image_id";
-    public static final String MOULD_POSITION = "mould_image_id";
+    public static final String MOULD_POSITION = "mould_position";
 
 
     private Mould[] mMoulds;
 
     private List<Mould> mMouldList = new ArrayList<>();
     private MouldAdapter mAdapter;
+
 
     @Nullable
     @Override
@@ -79,31 +80,11 @@ public class MouldChooseFragment extends Fragment {
                 Toast.makeText(getActivity(), "position=" + position + " mould=" + mould.getMouldName(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(getActivity(), ProgramEditActivity.class);
+                Log.e(TAG, "onItemClick: mould.getMouldId()="+mould.getMouldId());
                 intent.putExtra(MOULD_NAME, mould.getMouldName());
                 intent.putExtra(MOULD_IMAGE_ID, mould.getMouldId());
                 intent.putExtra(MOULD_POSITION, position);
                 startActivity(intent);
-                switch (position) {
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                    case 6:
-                        break;
-                    case 7:
-                        break;
-                    default:
-                        Log.e(TAG, "onItemClick: " + "error!");
-                        break;
-                }
 
             }
         });

@@ -36,7 +36,13 @@ public class ProgramFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.program_fragment, container, false);
+        initPrograms();
 
+        RecyclerView recyclerView = view.findViewById(R.id.program_rv);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new ProgramAdapter(mProgramList);
+        recyclerView.setAdapter(mAdapter);
         return view;
     }
 
@@ -44,13 +50,7 @@ public class ProgramFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        initPrograms();
 
-        RecyclerView recyclerView = getActivity().findViewById(R.id.program_rv);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-        recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new ProgramAdapter(mProgramList);
-        recyclerView.setAdapter(mAdapter);
 
     }
 

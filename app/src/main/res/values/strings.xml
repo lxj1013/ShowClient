@@ -29,4 +29,13 @@
     <string name="portrait_mould_two">portrait_mould_two</string>
     <string name="portrait_mould_three">portrait_mould_three</string>
     <string name="portrait_mould_four">portrait_mould_four</string>
+
+    <string name="program_screen_main">Main</string>
+    <string name="program_screen_two">Two</string>
+    <string name="program_screen_three">Three</string>
+    <string name="program_screen_four">Four</string>
+    <string name="program_music">Music</string>
+    <string name="program_subtitle">Sub</string>
+
+
 </resources>
