@@ -12,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -63,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mainToolbar, 0, 0);
+        drawerToggle.syncState();
+        mDrawerLayout.addDrawerListener(drawerToggle);
         navigationView.setCheckedItem(R.id.nav_program);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -193,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 break;
         }
-
+        menuItem.setChecked(true);
         mDrawerLayout.closeDrawers();
         return true;
     }

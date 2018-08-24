@@ -20,7 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="cn.com.hisistar.showclient.MainActivity">
+        <activity
+            android:name="cn.com.hisistar.showclient.MainActivity"
+            android:theme="@style/MyAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,13 +31,16 @@
         </activity>
         <activity
             android:name="cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity"
-            android:label="@string/title_add_str"></activity>
+            android:label="@string/title_add_str"
+            android:theme="@style/MyAppTheme"></activity>
 
         <service
             android:name="cn.com.hisistar.showclient.service.FileSendService"
             android:exported="false"></service>
 
-        <activity android:name="cn.com.hisistar.showclient.program.ProgramEditActivity"></activity>
+        <activity
+            android:name="cn.com.hisistar.showclient.program.ProgramEditActivity"
+            android:theme="@style/MyAppTheme"></activity>
     </application>
 
 </manifest>
