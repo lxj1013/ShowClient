@@ -41,6 +41,9 @@ public class ProgramSelectorFragment extends Fragment {
     private int pictureMimeType = 0;
 
     private List<LocalMedia> selectList = new ArrayList<>();
+
+    private String screenPath;
+
     private RecyclerView recyclerView;
     private GridImageAdapter adapter;
 
@@ -151,6 +154,14 @@ public class ProgramSelectorFragment extends Fragment {
 
     public void setSelectList(List<LocalMedia> selectList) {
         this.selectList = selectList;
+    }
+
+    public String getScreenPath() {
+        return screenPath;
+    }
+
+    public void setScreenPath(String screenPath) {
+        this.screenPath = screenPath;
     }
 }
 

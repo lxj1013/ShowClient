@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.hisistar.showclient.FileTransfer;
+import cn.com.hisistar.showclient.SettingsTransfer;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -46,7 +47,9 @@ public class FileSendService extends IntentService {
     private static final String EXTRA_NAME = "cn.com.histar.filereceivetest.extra.NAME";
     private static final String EXTRA_SRC_PATH = "cn.com.histar.filereceivetest.extra.SRC.PATH";
     private static final String EXTRA_DST_PATH = "cn.com.histar.filereceivetest.extra.DST.PATH";
+
     private static final String EXTRA_MEDIA_LIST = "cn.com.histar.filereceivetest.extra.MEDIA.LIST";
+    private static final String EXTRA_SETTINGS = "cn.com.histar.filereceivetest.extra.SETTINGS";
 
     private static int BUF_SIZE = 1024 * 10;
 
@@ -92,6 +95,16 @@ public class FileSendService extends IntentService {
         context.startService(intent);
     }
 
+    public static void startActionSend(Context context, List<FileTransfer> fileTransferList, SettingsTransfer settingsTransfer) {
+        Log.e(TAG, "startActionSend: ");
+        Intent intent = new Intent(context, FileSendService.class);
+        intent.putExtra(EXTRA_MEDIA_LIST, (Serializable) fileTransferList);
+        intent.putExtra(EXTRA_SETTINGS, (Serializable) settingsTransfer);
+        intent.setAction(ACTION_SEND);
+
+        context.startService(intent);
+    }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -110,7 +123,8 @@ public class FileSendService extends IntentService {
                 for (int i = 0; i < fileTransferList.size(); i++) {
                     Log.e(TAG, "onHandleIntent: " + fileTransferList.get(i).toString());
                 }
-                handleActionSend(fileTransferList);
+                SettingsTransfer settingsTransfer = getSettingsTransfer(intent);
+                handleActionSend(fileTransferList,settingsTransfer);
 
             }
         }
@@ -123,6 +137,16 @@ public class FileSendService extends IntentService {
         } else {
             fileTransferList = new ArrayList<>();
             return fileTransferList;
+        }
+    }
+
+    private SettingsTransfer getSettingsTransfer(Intent intent) {
+        SettingsTransfer settingsTransfer = (SettingsTransfer) intent.getSerializableExtra(EXTRA_SETTINGS);
+        if (settingsTransfer != null) {
+            return settingsTransfer;
+        } else {
+            settingsTransfer = new SettingsTransfer();
+            return settingsTransfer;
         }
     }
 
@@ -215,7 +239,7 @@ public class FileSendService extends IntentService {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),"Transfer completed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Transfer completed!", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -228,12 +252,69 @@ public class FileSendService extends IntentService {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(),"failed to connect to target!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "failed to connect to target!", Toast.LENGTH_SHORT).show();
 
                 }
             });
 
             Log.e(TAG, "handleActionSend: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    private void handleActionSend(List<FileTransfer> fileTransferList,SettingsTransfer settingsTransfer) {
+        try {
+            socket = new Socket();
+            socket.bind(null);
+            socket.connect(new InetSocketAddress("192.168.43.1", 14563), 10000);
+            outputStream = socket.getOutputStream();
+            objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(fileTransferList);
+            objectOutputStream.writeObject(settingsTransfer);
+            Log.e(TAG, "handleActionSend: " + "writeObject");
+            buf = new byte[BUF_SIZE];
+            int len;
+            for (int i = 0; i < fileTransferList.size(); i++) {
+                fileInputStream = new FileInputStream(new File(fileTransferList.get(i).getSrcFilePath()));
+                Log.e(TAG, "handleActionSend: " + fileTransferList.get(i).toString());
+                int size = 0;
+                int j = 0;
+                while ((len = fileInputStream.read(buf)) != -1) {
+                    size += len;
+                    j++;
+//                    Log.e(TAG, "handleActionSend: " + "len = " + len + " size = " + size);
+                    outputStream.write(buf, 0, len);
+                }
+                Log.e(TAG, "handleActionSend: " + "size=" + size + " j=" + j);
+//                outputStream.flush();
+            }
+            socket.shutdownOutput();
+            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String serverBack = bufferedReader.readLine();
+
+            Log.e(TAG, "handleActionSend: " + "backMsg = " + serverBack);
+            mHandler = new Handler(getMainLooper());
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Transfer completed!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            clean();
+
+        } catch (Exception e) {
+
+            final String eMessage = e.getMessage();
+            mHandler = new Handler(getMainLooper());
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "failed to connect to target!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+            Log.e(TAG, "handleActionSend: Exception=" + e.getMessage());
             e.printStackTrace();
         }
     }
