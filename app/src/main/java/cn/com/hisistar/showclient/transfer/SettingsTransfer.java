@@ -1,4 +1,4 @@
-package cn.com.hisistar.showclient;
+package cn.com.hisistar.showclient.transfer;
 
 import java.io.Serializable;
 

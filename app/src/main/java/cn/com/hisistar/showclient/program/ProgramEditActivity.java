@@ -1,12 +1,10 @@
 package cn.com.hisistar.showclient.program;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,10 +25,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.com.hisistar.showclient.FileTransfer;
-import cn.com.hisistar.showclient.SettingsTransfer;
+import cn.com.hisistar.showclient.transfer.FileTransfer;
+import cn.com.hisistar.showclient.transfer.SettingsTransfer;
 import cn.com.hisistar.showclient.mould.MouldChooseFragment;
-import cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity;
 import cn.com.hisistar.showclient.picture_selector.ProgramSelectorFragment;
 import cn.com.hisistar.showclient.service.FileSendService;
 import cn.com.histar.showclient.R;

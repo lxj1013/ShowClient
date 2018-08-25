@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,8 +22,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.com.hisistar.showclient.FileTransfer;
-import cn.com.hisistar.showclient.SettingsTransfer;
+import cn.com.hisistar.showclient.transfer.FileTransfer;
+import cn.com.hisistar.showclient.transfer.SettingsTransfer;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
