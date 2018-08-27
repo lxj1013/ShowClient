@@ -255,7 +255,7 @@ public class ProgramEditActivity extends AppCompatActivity {
                     String dstPath = fragment.getScreenPath();
                     for (int i = 0; i < selectList.size(); i++) {
                         String file_path = selectList.get(i).getPath();
-                        String name = getTime() + i + file_path.substring(file_path.lastIndexOf("."), file_path.length());
+                        String name = getTime(i) + file_path.substring(file_path.lastIndexOf("."), file_path.length());
 
 
                         fileTransferList.add(new FileTransfer(name, file_path, dstPath, new File(file_path).length()));
@@ -295,11 +295,14 @@ public class ProgramEditActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private String getTime() {
+    private String getTime(int index) {
 //        long timeStampSec = System.currentTimeMillis() / 1000;
 //        @SuppressLint("DefaultLocale") String timestamp = String.format("%010d", timeStampSec);
 //        return timestamp;
-        return String.valueOf(System.currentTimeMillis());
+        if (index < 10) {
+            return String.valueOf(System.currentTimeMillis()) + "0" + index;
+        }
+        return String.valueOf(System.currentTimeMillis()) + index;
     }
 
     public void hideInputKeyboard(final Context context) {
