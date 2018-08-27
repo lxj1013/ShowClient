@@ -12,6 +12,8 @@ public class SettingsTransfer implements Serializable {
 
     private int mouldPortraitMode = 0;
 
+    private String subTitle = "";
+
     public SettingsTransfer() {
     }
 
@@ -31,11 +33,20 @@ public class SettingsTransfer implements Serializable {
         this.mouldPortraitMode = mouldPortraitMode;
     }
 
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
     @Override
     public String toString() {
         return "SettingsTransfer{" +
                 "mouldLandscapeMode=" + mouldLandscapeMode +
                 ", mouldPortraitMode=" + mouldPortraitMode +
+                ", subTitle='" + subTitle + '\'' +
                 '}';
     }
 }

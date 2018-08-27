@@ -1,5 +1,7 @@
 package cn.com.hisistar.showclient.program;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,10 +16,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -66,7 +72,8 @@ public class ProgramEditActivity extends AppCompatActivity {
         }
         collapsingToolbarLayout.setTitle(mouldName);
         Log.e(TAG, "init: mouldImageId=" + mouldImageId);
-        Glide.with(this).load(mouldImageId).into(mouldImageView);
+        RequestOptions requestOptions = new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE);
+        Glide.with(this).load(mouldImageId).apply(requestOptions).into(mouldImageView);
 
 
         mTabLayout = findViewById(R.id.program_edit_tl);
@@ -76,7 +83,7 @@ public class ProgramEditActivity extends AppCompatActivity {
         Log.e(TAG, "init: mouldPosition=" + mouldPosition);
 
         mSettingsTransfer = new SettingsTransfer();
-        switch (mouldPosition){
+        switch (mouldPosition) {
             case 0:
                 mSettingsTransfer.setMouldLandscapeMode(1);
                 break;
@@ -109,7 +116,6 @@ public class ProgramEditActivity extends AppCompatActivity {
         mTitleList.clear();
         mFragments.clear();
         ProgramSelectorFragment fragment;
-
         fragment = new ProgramSelectorFragment();
         fragment.setScreenPath("/histarProgram/mainScreen");
         fragment.setPictureMimeType(PictureConfig.TYPE_ALL);
@@ -124,7 +130,7 @@ public class ProgramEditActivity extends AppCompatActivity {
                 fragment.setScreenPath("/histarProgram/musicProgram");
                 fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
                 mFragments.add(fragment);
-                mFragments.add(new ProgramFragment());
+                mFragments.add(new SubEditFragment());
                 break;
             case 1:
                 mTitleList.add(getResources().getString(R.string.program_screen_main));
@@ -139,7 +145,7 @@ public class ProgramEditActivity extends AppCompatActivity {
                 fragment.setScreenPath("/histarProgram/musicProgram");
                 fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
                 mFragments.add(fragment);
-                mFragments.add(new ProgramFragment());
+                mFragments.add(new SubEditFragment());
                 break;
             case 2:
             case 3:
@@ -162,7 +168,7 @@ public class ProgramEditActivity extends AppCompatActivity {
                 fragment.setScreenPath("/histarProgram/musicProgram");
                 fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
                 mFragments.add(fragment);
-                mFragments.add(new ProgramFragment());
+                mFragments.add(new SubEditFragment());
                 break;
             case 7:
                 mTitleList.add(getResources().getString(R.string.program_screen_main));
@@ -187,7 +193,7 @@ public class ProgramEditActivity extends AppCompatActivity {
                 fragment.setScreenPath("/histarProgram/musicProgram");
                 fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
                 mFragments.add(fragment);
-                mFragments.add(new ProgramFragment());
+                mFragments.add(new SubEditFragment());
                 break;
             default:
                 Log.e(TAG, "onItemClick: " + "error!");
@@ -218,6 +224,24 @@ public class ProgramEditActivity extends AppCompatActivity {
             }
         });
 
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+//                Toast.makeText(ProgramEditActivity.this, "hideIputKeyboard", Toast.LENGTH_SHORT).show();
+                hideInputKeyboard(ProgramEditActivity.this);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
 
         FloatingActionButton floatingActionButton = findViewById(R.id.program_edit_send_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -239,7 +263,14 @@ public class ProgramEditActivity extends AppCompatActivity {
                         Log.e(TAG, "onClick: " + fragment.getSelectList().get(i).getPath());
                     }
                 }
-                FileSendService.startActionSend(ProgramEditActivity.this, fileTransferList,mSettingsTransfer);
+
+
+                SubEditFragment subEditFragment = (SubEditFragment) mFragments.get(mFragments.size() - 1);
+                String subtitle = subEditFragment.getSubtitle();
+                mSettingsTransfer.setSubTitle(subtitle);
+//                Toast.makeText(ProgramEditActivity.this, subtitle, Toast.LENGTH_SHORT).show();
+
+                FileSendService.startActionSend(ProgramEditActivity.this, fileTransferList, mSettingsTransfer);
 
                 Toast.makeText(ProgramEditActivity.this, "fab clicked", Toast.LENGTH_SHORT).show();
             }
@@ -269,6 +300,20 @@ public class ProgramEditActivity extends AppCompatActivity {
 //        @SuppressLint("DefaultLocale") String timestamp = String.format("%010d", timeStampSec);
 //        return timestamp;
         return String.valueOf(System.currentTimeMillis());
+    }
+
+    public void hideInputKeyboard(final Context context) {
+        final Activity activity = (Activity) context;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager mInputKeyBoard = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (activity.getCurrentFocus() != null) {
+                    mInputKeyBoard.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                }
+            }
+        });
     }
 
 

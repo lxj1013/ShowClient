@@ -35,4 +35,9 @@
     <string name="program_screen_four">屏四</string>
     <string name="program_music">音乐</string>
     <string name="program_subtitle">字幕</string>
+
+
+    <string name="program_sub_edit_tips">输入字幕</string>
+
+
 </resources>

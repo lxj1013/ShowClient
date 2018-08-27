@@ -37,5 +37,7 @@
     <string name="program_music">Music</string>
     <string name="program_subtitle">Sub</string>
 
+    <string name="program_sub_edit_tips">input subtitle</string>
+
 
 </resources>

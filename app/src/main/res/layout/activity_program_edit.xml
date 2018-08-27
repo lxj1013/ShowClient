@@ -78,7 +78,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/icon_send"
-        app:rippleColor="@color/colorIndigo"
-        app:elevation="50dp" />
+        app:elevation="50dp"
+        app:rippleColor="@color/colorIndigo" />
 
 </android.support.design.widget.CoordinatorLayout>
