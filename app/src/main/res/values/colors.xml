@@ -31,4 +31,16 @@
     <color name="divider">#B6B6B6</color>
     <color name="color_c51">#f94c51</color>
     <color name="color_green">#43c117</color>
+
+
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="colorSemiPrimary">#7d3f51b5</color>
+    <color name="background">#e5e5e5</color>
+    <color name="half_black">#808080</color>
+    <color name="white_normal">#cdfafafa</color>
+    <color name="white_pressed">#c6f1f1f1</color>
+    <color name="pink">#e91e63</color>
+    <color name="pink_pressed">#ec407a</color>
+    <color name="blue_semi_transparent">#c85677fc</color>
+    <color name="blue_semi_transparent_pressed">#738ffe</color>
 </resources>

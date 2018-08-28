@@ -39,5 +39,8 @@
 
     <string name="program_sub_edit_tips">input subtitle</string>
 
+    <string name="program_fab_send">Send</string>
+    <string name="program_fab_save">Save</string>
+    <string name="program_fab_preview">Preview</string>
 
 </resources>

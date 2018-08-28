@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -24,6 +23,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -38,7 +39,7 @@ import cn.com.hisistar.showclient.picture_selector.ProgramSelectorFragment;
 import cn.com.hisistar.showclient.service.FileSendService;
 import cn.com.histar.showclient.R;
 
-public class ProgramEditActivity extends AppCompatActivity {
+public class ProgramEditActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "ProgramEditActivity";
 
@@ -50,6 +51,10 @@ public class ProgramEditActivity extends AppCompatActivity {
     private ArrayList<Fragment> mFragments = new ArrayList<>();
 
     private SettingsTransfer mSettingsTransfer;
+
+    private FloatingActionsMenu mFabMenu;
+    private FloatingActionButton mFabSend;
+    private FloatingActionButton mFabSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,41 +248,52 @@ public class ProgramEditActivity extends AppCompatActivity {
         });
 
 
-        FloatingActionButton floatingActionButton = findViewById(R.id.program_edit_send_fab);
+        /*FloatingActionButton floatingActionButton = findViewById(R.id.program_edit_send_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<FileTransfer> fileTransferList = new ArrayList<>();
-                List<LocalMedia> selectList = new ArrayList<>();
-                for (int j = 0; j < mFragments.size() - 1; j++) {
-                    ProgramSelectorFragment fragment = (ProgramSelectorFragment) mFragments.get(j);
-                    selectList = fragment.getSelectList();
-                    String dstPath = fragment.getScreenPath();
-                    for (int i = 0; i < selectList.size(); i++) {
-                        String file_path = selectList.get(i).getPath();
-                        String name = getTime(i) + file_path.substring(file_path.lastIndexOf("."), file_path.length());
-
-
-                        fileTransferList.add(new FileTransfer(name, file_path, dstPath, new File(file_path).length()));
-
-                        Log.e(TAG, "onClick: " + fragment.getSelectList().get(i).getPath());
-                    }
-                }
-
-
-                SubEditFragment subEditFragment = (SubEditFragment) mFragments.get(mFragments.size() - 1);
-                String subtitle = subEditFragment.getSubtitle();
-                mSettingsTransfer.setSubTitle(subtitle);
-//                Toast.makeText(ProgramEditActivity.this, subtitle, Toast.LENGTH_SHORT).show();
-
-                FileSendService.startActionSend(ProgramEditActivity.this, fileTransferList, mSettingsTransfer);
-
+//                sendProgram(mFragments, mSettingsTransfer);
                 Toast.makeText(ProgramEditActivity.this, "fab clicked", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
+        mFabMenu = findViewById(R.id.program_edit_fab_menu);
+        mFabSend = findViewById(R.id.program_edit_fab_send);
+        mFabSave = findViewById(R.id.program_edit_fab_save);
+
+        mFabSend.setOnClickListener(this);
+        mFabSave.setOnClickListener(this);
+    }
+
+
+    private void sendProgram(ArrayList<Fragment> fragments, SettingsTransfer settingsTransfer) {
+        List<FileTransfer> fileTransferList = new ArrayList<>();
+        List<LocalMedia> selectList = new ArrayList<>();
+        for (int j = 0; j < fragments.size() - 1; j++) {
+            ProgramSelectorFragment fragment = (ProgramSelectorFragment) fragments.get(j);
+            selectList = fragment.getSelectList();
+            String dstPath = fragment.getScreenPath();
+            for (int i = 0; i < selectList.size(); i++) {
+                String file_path = selectList.get(i).getPath();
+                String name = getTime(i) + file_path.substring(file_path.lastIndexOf("."), file_path.length());
+
+
+                fileTransferList.add(new FileTransfer(name, file_path, dstPath, new File(file_path).length()));
+
+                Log.e(TAG, "onClick: " + fragment.getSelectList().get(i).getPath());
+            }
+        }
+
+
+        SubEditFragment subEditFragment = (SubEditFragment) fragments.get(fragments.size() - 1);
+        String subtitle = subEditFragment.getSubtitle();
+        settingsTransfer.setSubTitle(subtitle);
+//                Toast.makeText(ProgramEditActivity.this, subtitle, Toast.LENGTH_SHORT).show();
+
+        FileSendService.startActionSend(ProgramEditActivity.this, fileTransferList, settingsTransfer);
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -320,4 +336,19 @@ public class ProgramEditActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.program_edit_fab_send:
+                mFabMenu.toggle();
+                Toast.makeText(this, "send", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.program_edit_fab_save:
+                mFabMenu.toggle();
+                Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+    }
 }

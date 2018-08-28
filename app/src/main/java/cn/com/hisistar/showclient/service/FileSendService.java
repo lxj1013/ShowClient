@@ -61,6 +61,8 @@ public class FileSendService extends IntentService {
     private ObjectOutputStream objectOutputStream;
     private Handler mHandler;
 
+
+
     public FileSendService() {
         super("FileSendService");
 
@@ -315,6 +317,8 @@ public class FileSendService extends IntentService {
 
             Log.e(TAG, "handleActionSend: Exception=" + e.getMessage());
             e.printStackTrace();
+        }finally {
+            clean();
         }
     }
 
@@ -389,4 +393,6 @@ public class FileSendService extends IntentService {
         clean();
         Log.e(TAG, "onDestroy: ");
     }
+
+
 }

@@ -39,5 +39,8 @@
 
     <string name="program_sub_edit_tips">输入字幕</string>
 
+    <string name="program_fab_send">发送</string>
+    <string name="program_fab_save">保存</string>
+    <string name="program_fab_preview">预览</string>
 
 </resources>
