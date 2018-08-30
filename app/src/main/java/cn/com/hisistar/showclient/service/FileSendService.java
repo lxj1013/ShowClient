@@ -3,7 +3,9 @@ package cn.com.hisistar.showclient.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,6 +23,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import cn.com.hisistar.showclient.transfer.FileTransfer;
 import cn.com.hisistar.showclient.transfer.SettingsTransfer;
@@ -62,10 +67,35 @@ public class FileSendService extends IntentService {
     private Handler mHandler;
 
 
+    private ScheduledExecutorService callbackService;
+    private String fileName = "";
+    private long startTime = 0;
+    private long fileSize = 0;
+    private long sendSize = 0;
+    private long totalFilesSize = 0;
+    private long sendFilesSize = 0;
+    private long sendTempSize = 0;
+    private int totalFilesNum = 0;
+    private int sendFilesNum = 0;
+    private long totalTime;
+    //计算瞬时传输速率的间隔时间
+    private static final int PERIOD = 1;
 
     public FileSendService() {
         super("FileSendService");
 
+    }
+
+    public class FileSendBinder extends Binder {
+        public FileSendService getService() {
+            return FileSendService.this;
+        }
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return new FileSendService.FileSendBinder();
     }
 
     /**
@@ -121,11 +151,13 @@ public class FileSendService extends IntentService {
 //                final String dstPath = intent.getStringExtra(EXTRA_DST_PATH);
 //                handleActionSend(port, ip, name, srcPath, dstPath);
                 List<FileTransfer> fileTransferList = getFileTransferList(intent);
+                totalFilesNum = fileTransferList.size();
                 for (int i = 0; i < fileTransferList.size(); i++) {
+                    totalFilesSize += fileTransferList.get(i).getFileSize();
                     Log.e(TAG, "onHandleIntent: " + fileTransferList.get(i).toString());
                 }
                 SettingsTransfer settingsTransfer = getSettingsTransfer(intent);
-                handleActionSend(fileTransferList,settingsTransfer);
+                handleActionSend(fileTransferList, settingsTransfer);
 
             }
         }
@@ -262,25 +294,39 @@ public class FileSendService extends IntentService {
             e.printStackTrace();
         }
     }
-    private void handleActionSend(List<FileTransfer> fileTransferList,SettingsTransfer settingsTransfer) {
+
+    private void handleActionSend(List<FileTransfer> fileTransferList, SettingsTransfer settingsTransfer) {
         try {
             socket = new Socket();
             socket.bind(null);
             socket.connect(new InetSocketAddress("192.168.43.1", 14563), 10000);
             outputStream = socket.getOutputStream();
             objectOutputStream = new ObjectOutputStream(outputStream);
+            if (mSendProgressChangListener != null) {
+                Log.e(TAG, "handleActionSend: startSendFilesAndSettingsMsg");
+                mSendProgressChangListener.startSendFilesAndSettingsMsg();
+            }
             objectOutputStream.writeObject(fileTransferList);
             objectOutputStream.writeObject(settingsTransfer);
             Log.e(TAG, "handleActionSend: " + "writeObject");
+//            fileName = fileTransferList.get(0).getFileName();
+            startCallback();
             buf = new byte[BUF_SIZE];
             int len;
             for (int i = 0; i < fileTransferList.size(); i++) {
+                String filePath = fileTransferList.get(i).getSrcFilePath();
+                fileName = filePath.substring(filePath.lastIndexOf("/"), filePath.length());
+                fileSize = fileTransferList.get(i).getFileSize();
+                sendSize = 0;
+                sendFilesNum = i + 1;
                 fileInputStream = new FileInputStream(new File(fileTransferList.get(i).getSrcFilePath()));
                 Log.e(TAG, "handleActionSend: " + fileTransferList.get(i).toString());
                 int size = 0;
                 int j = 0;
                 while ((len = fileInputStream.read(buf)) != -1) {
                     size += len;
+                    sendSize += len;
+                    sendFilesSize += len;
                     j++;
 //                    Log.e(TAG, "handleActionSend: " + "len = " + len + " size = " + size);
                     outputStream.write(buf, 0, len);
@@ -301,11 +347,18 @@ public class FileSendService extends IntentService {
 
                 }
             });
-            clean();
+            stopCallback();
+            if ((mSendProgressChangListener != null)&&(fileTransferList.size()>0)) {
+                mSendProgressChangListener.onProgressChanged(fileName, totalTime, 100, 100, totalFilesNum, sendFilesNum, 0, 0);
+                mSendProgressChangListener.onTransferSucceed();
+            }
+            //            clean();
 
         } catch (Exception e) {
 
-            final String eMessage = e.getMessage();
+            if (mSendProgressChangListener != null) {
+                mSendProgressChangListener.onTransferFailed(e);
+            }
             mHandler = new Handler(getMainLooper());
             mHandler.post(new Runnable() {
                 @Override
@@ -317,7 +370,7 @@ public class FileSendService extends IntentService {
 
             Log.e(TAG, "handleActionSend: Exception=" + e.getMessage());
             e.printStackTrace();
-        }finally {
+        } finally {
             clean();
         }
     }
@@ -366,7 +419,16 @@ public class FileSendService extends IntentService {
                 e.printStackTrace();
             }
         }
-
+        stopCallback();
+        fileName = "";
+        startTime = 0;
+        fileSize = 0;
+        sendSize = 0;
+        totalFilesSize = 0;
+        sendFilesSize = 0;
+        sendTempSize = 0;
+        totalFilesNum = 0;
+        sendFilesNum = 0;
     }
 
     @Override
@@ -392,6 +454,70 @@ public class FileSendService extends IntentService {
         super.onDestroy();
         clean();
         Log.e(TAG, "onDestroy: ");
+    }
+
+
+    private void startCallback() {
+        Log.e(TAG, "startCallback: ");
+        startTime = System.currentTimeMillis();
+        if (callbackService != null) {
+            if (!callbackService.isShutdown()) {
+                callbackService.shutdown();
+            }
+            callbackService = null;
+        }
+        callbackService = Executors.newScheduledThreadPool(2);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!fileName.equals("")) {
+                    //过去 PERIOD 秒内文件的瞬时传输速率（Kb/s）
+                    double instantSpeed = ((sendFilesSize - sendTempSize) / 1024.0 / PERIOD);
+                    //根据瞬时速率计算的-预估的剩余完成时间（）
+                    long instantRemainingTime = (long) ((totalFilesSize - sendFilesSize) / 1024.0 / instantSpeed);
+                    //当前传输进度（%）
+                    int currentProgress = (int) (sendSize * 100 / fileSize);
+                    //传输总进度（%）
+                    int totalProgress = (int) (sendFilesSize * 100 / totalFilesSize);
+
+                    totalTime = (System.currentTimeMillis() - startTime) / 1000;
+                    sendTempSize = sendFilesSize;
+                    if (mSendProgressChangListener != null) {
+                        mSendProgressChangListener.onProgressChanged(fileName, totalTime, currentProgress, totalProgress, totalFilesNum, sendFilesNum, instantSpeed, instantRemainingTime);
+                    }
+                }
+            }
+        };
+        //1秒钟之后每隔 PERIOD 秒钟执行一次任务 runnable（定时任务内部要捕获可能发生的异常，否则如果异常抛出到上层的话，会导致定时任务停止）
+        callbackService.scheduleAtFixedRate(runnable, 1, PERIOD, TimeUnit.SECONDS);
+    }
+
+    private void stopCallback() {
+        if (callbackService != null) {
+            if (!callbackService.isShutdown()) {
+                callbackService.shutdown();
+            }
+            callbackService = null;
+        }
+    }
+
+
+    public interface OnSendProgressChangListener {
+
+        void startSendFilesAndSettingsMsg();
+
+        void onProgressChanged(String fileName, long totalTime, int currentProgress, int totalProgress, int totalFilesNum, int sendFilesNum, double instantSpeed, long instantRemainingTime);
+
+        void onTransferSucceed();
+
+        void onTransferFailed(Exception e);
+
+    }
+
+    private OnSendProgressChangListener mSendProgressChangListener;
+
+    public void setSendProgressChangListener(OnSendProgressChangListener sendProgressChangListener) {
+        mSendProgressChangListener = sendProgressChangListener;
     }
 
 

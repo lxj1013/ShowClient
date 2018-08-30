@@ -1,8 +1,11 @@
 package cn.com.hisistar.showclient.program;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -56,11 +59,71 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
     private FloatingActionButton mFabSend;
     private FloatingActionButton mFabSave;
 
+    private FileSendService mFileSendService;
+
+    private FileSendService.OnSendProgressChangListener mOnSendProgressChangListener = new FileSendService.OnSendProgressChangListener() {
+        @Override
+        public void startSendFilesAndSettingsMsg() {
+            Log.e(TAG, "startSendFilesAndSettingsMsg: ");
+        }
+
+        @Override
+        public void onProgressChanged(String fileName, long totalTime, int currentProgress, int totalProgress, int totalFilesNum, int sendFilesNum, double instantSpeed, long instantRemainingTime) {
+            Log.e(TAG, "onProgressChanged: fileName=" + fileName);
+            Log.e(TAG, "onProgressChanged: totalTime=" + totalTime);
+            Log.e(TAG, "onProgressChanged: currentProgress=" + currentProgress);
+            Log.e(TAG, "onProgressChanged: totalProgress=" + totalProgress);
+            Log.e(TAG, "onProgressChanged: totalFilesNum=" + totalFilesNum);
+            Log.e(TAG, "onProgressChanged: sendFilesNum=" + sendFilesNum);
+            Log.e(TAG, "onProgressChanged: instantSpeed=" + instantSpeed);
+            Log.e(TAG, "onProgressChanged: instantRemainingTime=" + instantRemainingTime);
+        }
+
+        @Override
+        public void onTransferSucceed() {
+            Log.e(TAG, "onTransferSucceed: ");
+        }
+
+        @Override
+        public void onTransferFailed(Exception e) {
+            Log.e(TAG, "onTransferFailed: Msg=" + e.getMessage());
+        }
+    };
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            FileSendService.FileSendBinder binder = (FileSendService.FileSendBinder) service;
+            mFileSendService = binder.getService();
+            mFileSendService.setSendProgressChangListener(mOnSendProgressChangListener);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mFileSendService = null;
+            Intent intent = new Intent(ProgramEditActivity.this, FileSendService.class);
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_program_edit);
         init();
+        Intent intent = new Intent(ProgramEditActivity.this, FileSendService.class);
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mFileSendService != null) {
+            mFileSendService.setSendProgressChangListener(null);
+            mFileSendService = null;
+            unbindService(mServiceConnection);
+        }
     }
 
     private void init() {
@@ -274,11 +337,11 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
             selectList = fragment.getSelectList();
             String dstPath = fragment.getScreenPath();
             for (int i = 0; i < selectList.size(); i++) {
-                String file_path = selectList.get(i).getPath();
-                String name = getTime(i) + file_path.substring(file_path.lastIndexOf("."), file_path.length());
+                String filePath = selectList.get(i).getPath();
+                String name = getTime(i) + filePath.substring(filePath.lastIndexOf("."), filePath.length());
 
 
-                fileTransferList.add(new FileTransfer(name, file_path, dstPath, new File(file_path).length()));
+                fileTransferList.add(new FileTransfer(name, filePath, dstPath, new File(filePath).length()));
 
                 Log.e(TAG, "onClick: " + fragment.getSelectList().get(i).getPath());
             }
@@ -289,7 +352,6 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         String subtitle = subEditFragment.getSubtitle();
         settingsTransfer.setSubTitle(subtitle);
 //                Toast.makeText(ProgramEditActivity.this, subtitle, Toast.LENGTH_SHORT).show();
-
         FileSendService.startActionSend(ProgramEditActivity.this, fileTransferList, settingsTransfer);
 
     }
@@ -341,6 +403,7 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.program_edit_fab_send:
                 mFabMenu.toggle();
+                sendProgram(mFragments, mSettingsTransfer);
                 Toast.makeText(this, "send", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.program_edit_fab_save:
