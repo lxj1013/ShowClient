@@ -58,12 +58,12 @@ public class ProgressDialogActivity extends AppCompatActivity {
         @Override
         public void startSendFilesAndSettingsMsg() {
             Log.e(TAG, "startSendFilesAndSettingsMsg: ");
-            runOnUiThread(new Runnable() {
+           /* runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mFileSendTipsTv.setText("startSendFilesAndSettingsMsg");
                 }
-            });
+            });*/
         }
 
         @Override
@@ -276,9 +276,9 @@ public class ProgressDialogActivity extends AppCompatActivity {
     private void startFileSendService(Intent intent) {
         List<FileTransfer> fileTransferList = ProgressDialogActivity.getFileTransferList(intent);
         SettingsTransfer settingsTransfer = ProgressDialogActivity.getSettingsTransfer(intent);
-        Intent serviceIntent = new Intent(ProgressDialogActivity.this, ProgressDialogActivity.class);
-        serviceIntent.putExtra(EXTRA_MEDIA_LIST, (Serializable) fileTransferList);
-        serviceIntent.putExtra(EXTRA_SETTINGS, (Serializable) settingsTransfer);
+//        Intent serviceIntent = new Intent(ProgressDialogActivity.this, ProgressDialogActivity.class);
+//        serviceIntent.putExtra(EXTRA_MEDIA_LIST, (Serializable) fileTransferList);
+//        serviceIntent.putExtra(EXTRA_SETTINGS, (Serializable) settingsTransfer);
         FileSendService.startActionSend(ProgressDialogActivity.this, fileTransferList, settingsTransfer);
     }
 

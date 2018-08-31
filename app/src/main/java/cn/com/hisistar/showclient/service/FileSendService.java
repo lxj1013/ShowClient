@@ -297,7 +297,7 @@ public class FileSendService extends IntentService {
             int len;
             for (int i = 0; i < fileTransferList.size(); i++) {
                 String filePath = fileTransferList.get(i).getSrcFilePath();
-                fileName = filePath.substring(filePath.lastIndexOf("/"), filePath.length());
+                fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
                 fileSize = fileTransferList.get(i).getFileSize();
                 sendSize = 0;
                 sendFilesNum = i + 1;
@@ -437,7 +437,7 @@ public class FileSendService extends IntentService {
         Log.e(TAG, "onDestroy: ");
     }
 
-
+    long instantRemainingTime = 0;
     private void startCallback() {
         Log.e(TAG, "startCallback: ");
         startTime = System.currentTimeMillis();
@@ -451,23 +451,30 @@ public class FileSendService extends IntentService {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (!fileName.equals("")) {
-                    //过去 PERIOD 秒内文件的瞬时传输速率（Kb/s）
-                    long instantSpeed = ((sendFilesSize - sendTempSize) / 1024 / PERIOD);
-                    //根据瞬时速率计算的-预估的剩余完成时间（）
-                    long instantRemainingTime = ((totalFilesSize - sendFilesSize) / 1024 / instantSpeed);
-                    //当前传输进度（%）
-                    int currentProgress = (int) (sendSize * 100 / fileSize);
-                    //传输总进度（%）
-                    int totalProgress = (int) (sendFilesSize * 100 / totalFilesSize);
 
-                    double totalSize = totalFilesSize / 1024.0 / 1024.0;
+                try {
+                    if (!fileName.equals("")) {
+                        //过去 PERIOD 秒内文件的瞬时传输速率（Kb/s）
+                        long instantSpeed = ((sendFilesSize - sendTempSize) / 1024 / PERIOD);
+                        //根据瞬时速率计算的-预估的剩余完成时间（）
+                        if (instantSpeed !=0){
+                            instantRemainingTime = ((totalFilesSize - sendFilesSize) / 1024 / instantSpeed);
+                        }
+                        //当前传输进度（%）
+                        int currentProgress = (int) (sendSize * 100 / fileSize);
+                        //传输总进度（%）
+                        int totalProgress = (int) (sendFilesSize * 100 / totalFilesSize);
 
-                    totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                    sendTempSize = sendFilesSize;
-                    if (mSendProgressChangListener != null) {
-                        mSendProgressChangListener.onProgressChanged(fileName, totalTime, totalSize, currentProgress, totalProgress, totalFilesNum, sendFilesNum, instantSpeed, instantRemainingTime);
+                        double totalSize = totalFilesSize / 1024.0 / 1024.0;
+
+                        totalTime = (System.currentTimeMillis() - startTime) / 1000;
+                        sendTempSize = sendFilesSize;
+                        if (mSendProgressChangListener != null) {
+                            mSendProgressChangListener.onProgressChanged(fileName, totalTime, totalSize, currentProgress, totalProgress, totalFilesNum, sendFilesNum, instantSpeed, instantRemainingTime);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
