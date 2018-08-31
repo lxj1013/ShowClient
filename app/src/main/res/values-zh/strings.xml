@@ -43,4 +43,17 @@
     <string name="program_fab_save">保存</string>
     <string name="program_fab_preview">预览</string>
 
+
+    <string name="progress_title_str">发送节目中…</string>
+    <string name="progress_program_info_str">总共: %1$d 项, 总大小: %2$.2f MB</string>
+    <string name="progress_cur_file_str">当前文件: %1$s</string>
+    <string name="progress_cur_progress_tips_str">当前进度:&#160;</string>
+    <string name="progress_total_progress_tips_str">总进度:&#160;</string>
+    <string name="progress_total_progress_slash_str">/</string>
+    <string name="progress_total_time_tips_str">总时间:&#160;</string>
+    <string name="progress_remaining_time_tips_str">剩余时间:&#160;</string>
+    <string name="progress_file_send_succeed_str">节目发送成功！</string>
+    <string name="progress_file_send_failed_str">节目发送失败！</string>
+    <string name="progress_back_btn_tips_str">请耐心等待…</string>
+    <string name="progress_back_btn_str">返回</string>
 </resources>

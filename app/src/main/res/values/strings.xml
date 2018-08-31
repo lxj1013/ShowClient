@@ -43,4 +43,19 @@
     <string name="program_fab_save">Save</string>
     <string name="program_fab_preview">Preview</string>
 
+
+    <string name="progress_title_str">Program is sending…</string>
+    <string name="progress_program_info_str">Total: %1$d items, Total size: %2$.2f MB</string>
+    <string name="progress_cur_file_str">Current File: %1$s</string>
+    <string name="progress_cur_progress_tips_str">Current Progress:&#160;</string>
+    <string name="progress_total_progress_tips_str">Total Progress:&#160;</string>
+    <string name="progress_total_progress_slash_str">/</string>
+    <string name="progress_total_time_tips_str">Total Time:&#160;</string>
+    <string name="progress_remaining_time_tips_str">Remaining Time:&#160;</string>
+    <string name="progress_file_send_succeed_str">Program Send Succeed!</string>
+    <string name="progress_file_send_failed_str">Program Send Failed!</string>
+    <string name="progress_back_btn_tips_str">Please Wait…</string>
+    <string name="progress_back_btn_str">Back</string>
+
+
 </resources>

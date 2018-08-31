@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="3dp"
+    tools:context="cn.com.hisistar.showclient.ProgressDialogActivity">
+
+    <LinearLayout
+        android:id="@+id/progress_title_ll"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/progress_title_iv"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_send" />
+
+        <TextView
+            android:id="@+id/progress_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/progress_title_str"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/progress_program_info_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_title_ll"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/progress_cur_file_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_program_info_tv"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/progress_cur_progress_tips_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/progress_cur_file_tv"
+        android:layout_marginTop="2dp"
+        android:text="@string/progress_cur_progress_tips_str" />
+
+    <TextView
+        android:id="@+id/progress_cur_progress_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/progress_cur_file_tv"
+        android:layout_marginTop="2dp" />
+
+    <ProgressBar
+        android:id="@+id/progress_cur_progress_pb"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_cur_progress_tips_tv"
+        android:layout_marginTop="2dp"
+        android:max="100"
+        android:progressDrawable="@drawable/progress_style" />
+
+    <TextView
+        android:id="@+id/progress_total_progress_tips_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/progress_cur_progress_pb"
+        android:layout_marginTop="8dp"
+        android:text="@string/progress_total_progress_tips_str" />
+
+    <TextView
+        android:id="@+id/progress_cur_item_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_cur_progress_pb"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/progress_total_progress_tips_tv"
+        android:layout_toRightOf="@id/progress_total_progress_tips_tv" />
+
+    <TextView
+        android:id="@+id/progress_item_slash_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_cur_progress_pb"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/progress_cur_item_tv"
+        android:layout_toRightOf="@id/progress_cur_item_tv"
+        android:text="@string/progress_total_progress_slash_str" />
+
+    <TextView
+        android:id="@+id/progress_total_item_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_cur_progress_pb"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/progress_item_slash_tv"
+        android:layout_toRightOf="@id/progress_item_slash_tv" />
+
+    <TextView
+        android:id="@+id/progress_total_progress_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/progress_cur_progress_pb"
+        android:layout_marginTop="8dp" />
+
+    <ProgressBar
+        android:id="@+id/progress_total_progress_pb"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_total_progress_tips_tv"
+        android:layout_marginTop="2dp"
+        android:max="100"
+        android:progressDrawable="@drawable/progress_style" />
+
+    <TextView
+        android:id="@+id/progress_total_time_tips_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/progress_total_progress_pb"
+        android:layout_marginTop="8dp"
+        android:text="@string/progress_total_time_tips_str" />
+
+    <TextView
+        android:id="@+id/progress_total_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_total_progress_pb"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/progress_total_time_tips_tv"
+        android:layout_toRightOf="@id/progress_total_time_tips_tv" />
+
+    <TextView
+        android:id="@+id/progress_remaining_time_tips_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_total_time_tips_tv"
+        android:layout_marginTop="2dp"
+        android:text="@string/progress_remaining_time_tips_str" />
+
+    <TextView
+        android:id="@+id/progress_remaining_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_total_time_tips_tv"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@id/progress_remaining_time_tips_tv"
+        android:layout_toRightOf="@id/progress_remaining_time_tips_tv" />
+
+    <TextView
+        android:id="@+id/progress_file_send_speed_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/progress_total_time_tips_tv"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/progress_file_send_tips_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_remaining_time_tv"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/progress_back_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="2dp"
+        android:gravity="center"
+        android:textSize="20sp" />
+</RelativeLayout>

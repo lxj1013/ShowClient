@@ -21,14 +21,18 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import cn.com.hisistar.showclient.ProgressDialogActivity;
 import cn.com.hisistar.showclient.transfer.FileTransfer;
 import cn.com.hisistar.showclient.transfer.SettingsTransfer;
+
+import static cn.com.hisistar.showclient.ProgressDialogActivity.EXTRA_MEDIA_LIST;
+import static cn.com.hisistar.showclient.ProgressDialogActivity.EXTRA_SETTINGS;
+
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -43,17 +47,14 @@ public class FileSendService extends IntentService {
 
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_SEND = "cn.com.histar.filereceivetest.action.SEND";
+    private static final String ACTION_SEND = "cn.com.hisistar.filesendservice.action.SEND";
 
     // TODO: Rename parameters
-    private static final String EXTRA_PORT = "cn.com.histar.filereceivetest.extra.PORT";
-    private static final String EXTRA_IP = "cn.com.histar.filereceivetest.extra.IP";
-    private static final String EXTRA_NAME = "cn.com.histar.filereceivetest.extra.NAME";
-    private static final String EXTRA_SRC_PATH = "cn.com.histar.filereceivetest.extra.SRC.PATH";
-    private static final String EXTRA_DST_PATH = "cn.com.histar.filereceivetest.extra.DST.PATH";
-
-    private static final String EXTRA_MEDIA_LIST = "cn.com.histar.filereceivetest.extra.MEDIA.LIST";
-    private static final String EXTRA_SETTINGS = "cn.com.histar.filereceivetest.extra.SETTINGS";
+    private static final String EXTRA_PORT = "cn.com.hisistar.filesendservice.extra.PORT";
+    private static final String EXTRA_IP = "cn.com.hisistar.filesendservice.extra.IP";
+    private static final String EXTRA_NAME = "cn.com.hisistar.filesendservice.extra.NAME";
+    private static final String EXTRA_SRC_PATH = "cn.com.hisistar.filesendservice.extra.SRC.PATH";
+    private static final String EXTRA_DST_PATH = "cn.com.hisistar.filesendservice.extra.DST.PATH";
 
     private static int BUF_SIZE = 1024 * 10;
 
@@ -150,38 +151,19 @@ public class FileSendService extends IntentService {
 //                final List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(intent);
 //                final String dstPath = intent.getStringExtra(EXTRA_DST_PATH);
 //                handleActionSend(port, ip, name, srcPath, dstPath);
-                List<FileTransfer> fileTransferList = getFileTransferList(intent);
+                List<FileTransfer> fileTransferList = ProgressDialogActivity.getFileTransferList(intent);
                 totalFilesNum = fileTransferList.size();
                 for (int i = 0; i < fileTransferList.size(); i++) {
                     totalFilesSize += fileTransferList.get(i).getFileSize();
                     Log.e(TAG, "onHandleIntent: " + fileTransferList.get(i).toString());
                 }
-                SettingsTransfer settingsTransfer = getSettingsTransfer(intent);
+                SettingsTransfer settingsTransfer = ProgressDialogActivity.getSettingsTransfer(intent);
                 handleActionSend(fileTransferList, settingsTransfer);
 
             }
         }
     }
 
-    private List<FileTransfer> getFileTransferList(Intent intent) {
-        List<FileTransfer> fileTransferList = (List<FileTransfer>) intent.getSerializableExtra(EXTRA_MEDIA_LIST);
-        if (!fileTransferList.isEmpty()) {
-            return fileTransferList;
-        } else {
-            fileTransferList = new ArrayList<>();
-            return fileTransferList;
-        }
-    }
-
-    private SettingsTransfer getSettingsTransfer(Intent intent) {
-        SettingsTransfer settingsTransfer = (SettingsTransfer) intent.getSerializableExtra(EXTRA_SETTINGS);
-        if (settingsTransfer != null) {
-            return settingsTransfer;
-        } else {
-            settingsTransfer = new SettingsTransfer();
-            return settingsTransfer;
-        }
-    }
 
     /**
      * Handle action Foo in the provided background thread with the provided
@@ -344,12 +326,11 @@ public class FileSendService extends IntentService {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(), "Transfer completed!", Toast.LENGTH_SHORT).show();
-
                 }
             });
             stopCallback();
-            if ((mSendProgressChangListener != null)&&(fileTransferList.size()>0)) {
-                mSendProgressChangListener.onProgressChanged(fileName, totalTime, 100, 100, totalFilesNum, sendFilesNum, 0, 0);
+            if (mSendProgressChangListener != null) {
+                mSendProgressChangListener.onProgressChanged(fileName, totalTime, totalFilesSize / 1024.0 / 1024.0, 100, 100, totalFilesNum, sendFilesNum, 0, 0);
                 mSendProgressChangListener.onTransferSucceed();
             }
             //            clean();
@@ -472,18 +453,20 @@ public class FileSendService extends IntentService {
             public void run() {
                 if (!fileName.equals("")) {
                     //过去 PERIOD 秒内文件的瞬时传输速率（Kb/s）
-                    double instantSpeed = ((sendFilesSize - sendTempSize) / 1024.0 / PERIOD);
+                    long instantSpeed = ((sendFilesSize - sendTempSize) / 1024 / PERIOD);
                     //根据瞬时速率计算的-预估的剩余完成时间（）
-                    long instantRemainingTime = (long) ((totalFilesSize - sendFilesSize) / 1024.0 / instantSpeed);
+                    long instantRemainingTime = ((totalFilesSize - sendFilesSize) / 1024 / instantSpeed);
                     //当前传输进度（%）
                     int currentProgress = (int) (sendSize * 100 / fileSize);
                     //传输总进度（%）
                     int totalProgress = (int) (sendFilesSize * 100 / totalFilesSize);
 
+                    double totalSize = totalFilesSize / 1024.0 / 1024.0;
+
                     totalTime = (System.currentTimeMillis() - startTime) / 1000;
                     sendTempSize = sendFilesSize;
                     if (mSendProgressChangListener != null) {
-                        mSendProgressChangListener.onProgressChanged(fileName, totalTime, currentProgress, totalProgress, totalFilesNum, sendFilesNum, instantSpeed, instantRemainingTime);
+                        mSendProgressChangListener.onProgressChanged(fileName, totalTime, totalSize, currentProgress, totalProgress, totalFilesNum, sendFilesNum, instantSpeed, instantRemainingTime);
                     }
                 }
             }
@@ -506,7 +489,7 @@ public class FileSendService extends IntentService {
 
         void startSendFilesAndSettingsMsg();
 
-        void onProgressChanged(String fileName, long totalTime, int currentProgress, int totalProgress, int totalFilesNum, int sendFilesNum, double instantSpeed, long instantRemainingTime);
+        void onProgressChanged(String fileName, long totalTime, double totalSize, int currentProgress, int totalProgress, int totalFilesNum, int sendFilesNum, long instantSpeed, long instantRemainingTime);
 
         void onTransferSucceed();
 

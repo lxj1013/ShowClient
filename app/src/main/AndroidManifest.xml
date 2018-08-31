@@ -41,6 +41,10 @@
         <activity
             android:name="cn.com.hisistar.showclient.program.ProgramEditActivity"
             android:theme="@style/MyAppTheme"></activity>
+
+        <activity android:name="cn.com.hisistar.showclient.ProgressDialogActivity"
+            android:theme="@style/DialogTheme"></activity>
+
     </application>
 
 </manifest>
