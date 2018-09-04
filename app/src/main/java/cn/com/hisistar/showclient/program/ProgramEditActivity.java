@@ -3,6 +3,7 @@ package cn.com.hisistar.showclient.program;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -11,15 +12,18 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -42,7 +46,7 @@ import cn.com.hisistar.showclient.transfer.SettingsTransfer;
 import cn.com.hisistar.showclient.mould.MouldChooseFragment;
 import cn.com.hisistar.showclient.picture_selector.ProgramSelectorFragment;
 import cn.com.hisistar.showclient.service.FileSendService;
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 import static cn.com.hisistar.showclient.ProgressDialogActivity.EXTRA_MEDIA_LIST;
 import static cn.com.hisistar.showclient.ProgressDialogActivity.EXTRA_SETTINGS;
@@ -303,11 +307,30 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         settingsTransfer.setSubTitle(subtitle);
 //                Toast.makeText(ProgramEditActivity.this, subtitle, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(ProgramEditActivity.this,ProgressDialogActivity.class);
+        Intent intent = new Intent(ProgramEditActivity.this, ProgressDialogActivity.class);
         intent.putExtra(EXTRA_MEDIA_LIST, (Serializable) fileTransferList);
         intent.putExtra(EXTRA_SETTINGS, (Serializable) settingsTransfer);
         startActivity(intent);
 //        FileSendService.startActionSend(ProgramEditActivity.this, fileTransferList, settingsTransfer);
+
+    }
+
+    private void saveProgram() {
+        final EditText nameEdit = new EditText(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("input Program Name")
+                .setView(nameEdit)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String nameStr = nameEdit.getText().toString();
+                        if ((nameStr != null)&&(!nameStr.trim().isEmpty())) {
+                            Toast.makeText(ProgramEditActivity.this, nameStr, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("cancel", null);
+        builder.show();
 
     }
 
@@ -364,10 +387,13 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.program_edit_fab_save:
                 mFabMenu.toggle();
+                saveProgram();
                 Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
         }
     }
+
+
 }

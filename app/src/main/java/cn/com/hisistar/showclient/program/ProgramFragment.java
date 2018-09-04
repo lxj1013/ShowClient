@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 public class ProgramFragment extends Fragment {
 

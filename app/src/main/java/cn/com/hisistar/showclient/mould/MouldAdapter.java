@@ -18,7 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 public class MouldAdapter extends RecyclerView.Adapter<MouldAdapter.ViewHolder> {
 

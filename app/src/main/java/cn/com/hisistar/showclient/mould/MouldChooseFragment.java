@@ -21,7 +21,7 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 import cn.com.hisistar.showclient.program.ProgramEditActivity;
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 public class MouldChooseFragment extends Fragment {
 

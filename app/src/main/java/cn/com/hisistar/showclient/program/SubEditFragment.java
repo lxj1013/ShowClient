@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 /**
  * @author lxj

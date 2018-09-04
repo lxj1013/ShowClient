@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 
 /**

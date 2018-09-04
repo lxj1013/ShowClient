@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.hisistar.showclient.transfer.FileTransfer;
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 import cn.com.hisistar.showclient.picture_selector.adapter.GridImageAdapter;
 import cn.com.hisistar.showclient.service.FileSendService;
 

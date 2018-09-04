@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHolder> {
 
@@ -54,7 +54,7 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         Program program = mProgramList.get(position);
         holder.mProgramNameTv.setText(program.getProgramName());
-        Glide.with(mContext).load(program.getProgramId()).into(holder.mProgramIv);
+        Glide.with(mContext).load(program.getMouldImg()).into(holder.mProgramIv);
     }
 
 

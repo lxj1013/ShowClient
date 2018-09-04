@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 public class MouldFragment extends Fragment {
 

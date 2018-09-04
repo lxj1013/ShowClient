@@ -22,7 +22,7 @@ import java.util.List;
 import cn.com.hisistar.showclient.service.FileSendService;
 import cn.com.hisistar.showclient.transfer.FileTransfer;
 import cn.com.hisistar.showclient.transfer.SettingsTransfer;
-import cn.com.histar.showclient.R;
+import cn.com.hisistar.showclient.R;
 
 public class ProgressDialogActivity extends AppCompatActivity {
 

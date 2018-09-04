@@ -26,6 +26,8 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.RxPermissions;
 import com.luck.picture.lib.tools.PictureFileUtils;
 
+import org.litepal.tablemanager.Connector;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,6 @@ import cn.com.hisistar.showclient.mould.MouldFragment;
 import cn.com.hisistar.showclient.picture_selector.MyPictureSelectorActivity;
 import cn.com.hisistar.showclient.program.ProgramFragment;
 import cn.com.hisistar.showclient.settings.SettingsFragment;
-import cn.com.histar.showclient.R;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initView() {
+        Connector.getDatabase();
         mainToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
         mDrawerLayout = findViewById(R.id.drawer_layout);
