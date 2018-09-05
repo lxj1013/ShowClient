@@ -57,5 +57,7 @@
     <string name="progress_back_btn_tips_str">Please Wait…</string>
     <string name="progress_back_btn_str">Back</string>
 
+    <string name="input_name_dialog_title">Input Program Name</string>
+    <string name="input_name_dialog_error_tips">Name can not be empty</string>
 
 </resources>

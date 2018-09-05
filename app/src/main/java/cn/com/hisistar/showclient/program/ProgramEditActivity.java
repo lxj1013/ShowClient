@@ -41,6 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.hisistar.showclient.ProgressDialogActivity;
+import cn.com.hisistar.showclient.database.LocalMediaTable;
+import cn.com.hisistar.showclient.database.ProgramTable;
+import cn.com.hisistar.showclient.database.SettingsTable;
 import cn.com.hisistar.showclient.transfer.FileTransfer;
 import cn.com.hisistar.showclient.transfer.SettingsTransfer;
 import cn.com.hisistar.showclient.mould.MouldChooseFragment;
@@ -68,6 +71,9 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
     private FloatingActionButton mFabSend;
     private FloatingActionButton mFabSave;
 
+    private int mouldImageId;
+    private int mouldPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +89,7 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
     private void init() {
         Intent intent = getIntent();
         String mouldName = intent.getStringExtra(MouldChooseFragment.MOULD_NAME);
-        int mouldImageId = intent.getIntExtra(MouldChooseFragment.MOULD_IMAGE_ID, 0);
+        mouldImageId = intent.getIntExtra(MouldChooseFragment.MOULD_IMAGE_ID, 0);
         Toolbar toolbar = findViewById(R.id.program_edit_toolbar);
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.program_edit_coll_toolbar);
         ImageView mouldImageView = findViewById(R.id.program_edit_title_iv);
@@ -101,7 +107,7 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         mTabLayout = findViewById(R.id.program_edit_tl);
         mViewPager = findViewById(R.id.program_edit_vp);
 
-        final int mouldPosition = intent.getIntExtra(MouldChooseFragment.MOULD_POSITION, 0);
+        mouldPosition = intent.getIntExtra(MouldChooseFragment.MOULD_POSITION, 0);
         Log.e(TAG, "init: mouldPosition=" + mouldPosition);
 
         mSettingsTransfer = new SettingsTransfer();
@@ -315,23 +321,128 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    private void saveProgram() {
-        final EditText nameEdit = new EditText(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("input Program Name")
-                .setView(nameEdit)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String nameStr = nameEdit.getText().toString();
-                        if ((nameStr != null)&&(!nameStr.trim().isEmpty())) {
-                            Toast.makeText(ProgramEditActivity.this, nameStr, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton("cancel", null);
-        builder.show();
+    private void saveProgram(String name, int mouldImageId, int mouldPosition, ArrayList<Fragment> fragments, SettingsTransfer settingsTransfer) {
+//        Toast.makeText(this, "saveProgram", Toast.LENGTH_SHORT).show();
 
+        List<LocalMedia> selectList;
+        ProgramTable programTable = new ProgramTable();
+        List<LocalMediaTable> localMediaTableList;
+        SettingsTable settingsTable;
+        for (int i = 0; i < fragments.size() - 1; i++) {
+            ProgramSelectorFragment fragment = (ProgramSelectorFragment) fragments.get(i);
+            selectList = fragment.getSelectList();
+            if (i == (fragments.size() - 2)) {
+                localMediaTableList = getLocalMediaTableList(selectList, "music");
+                programTable.setMusicList(localMediaTableList);
+                break;
+            }
+            switch (i) {
+                case 0:
+                    localMediaTableList = getLocalMediaTableList(selectList, "main");
+                    programTable.setMainList(localMediaTableList);
+                    break;
+                case 1:
+                    localMediaTableList = getLocalMediaTableList(selectList, "two");
+                    programTable.setListTwo(localMediaTableList);
+                    break;
+                case 2:
+                    localMediaTableList = getLocalMediaTableList(selectList, "three");
+                    programTable.setListThree(localMediaTableList);
+                    break;
+                case 3:
+                    localMediaTableList = getLocalMediaTableList(selectList, "four");
+                    programTable.setListFour(localMediaTableList);
+                    break;
+                default:
+                    Log.e(TAG, "saveProgram: error!!!");
+                    break;
+            }
+        }
+        SubEditFragment subEditFragment = (SubEditFragment) fragments.get(fragments.size() - 1);
+        String subtitle = subEditFragment.getSubtitle();
+        settingsTransfer.setSubTitle(subtitle);
+        settingsTable = getSettingsTable(settingsTransfer);
+        programTable.setSettings(settingsTable);
+        programTable.setProgramName(name);
+        programTable.setMouldImg(mouldImageId);
+        programTable.setMouldPosition(mouldPosition);
+        programTable.save();
+
+    }
+
+    private List<LocalMediaTable> getLocalMediaTableList(List<LocalMedia> localMediaList, String screen) {
+        List<LocalMediaTable> localMediaTableList = new ArrayList<>();
+        LocalMedia localMedia;
+        LocalMediaTable localMediaTable;
+        if ((localMediaList != null) && (!localMediaList.isEmpty()) && (screen != null))
+            for (int i = 0; i < localMediaList.size(); i++) {
+                localMedia = localMediaList.get(i);
+                localMediaTable = new LocalMediaTable();
+                localMediaTable.setScreen(screen);
+                localMediaTable.setPath(localMedia.getPath());
+                localMediaTable.setCompressPath(localMedia.getCompressPath());
+                localMediaTable.setCutPath(localMedia.getCutPath());
+                localMediaTable.setDuration(localMedia.getDuration());
+                localMediaTable.setChecked(localMedia.isChecked());
+                localMediaTable.setCut(localMedia.isCut());
+                localMediaTable.setPosition(localMedia.getPosition());
+                localMediaTable.setNum(localMedia.getNum());
+                localMediaTable.setMimeType(localMedia.getMimeType());
+                localMediaTable.setPictureType(localMedia.getPictureType());
+                localMediaTable.setCompressed(localMedia.isCompressed());
+                localMediaTable.setWidth(localMedia.getWidth());
+                localMediaTable.setHeight(localMedia.getHeight());
+                localMediaTableList.add(localMediaTable);
+            }
+        return localMediaTableList;
+    }
+
+
+    private List<LocalMedia> getLocalMediaList(List<LocalMediaTable> localMediaTableList) {
+        List<LocalMedia> localMediaList = new ArrayList<>();
+        LocalMediaTable localMediaTable;
+        LocalMedia localMedia;
+        if ((localMediaTableList != null) && (!localMediaTableList.isEmpty())) {
+            for (int i = 0; i < localMediaTableList.size(); i++) {
+                localMediaTable = localMediaTableList.get(i);
+                localMedia = new LocalMedia();
+                localMedia.setPath(localMediaTable.getPath());
+                localMedia.setCompressPath(localMediaTable.getCompressPath());
+                localMedia.setCutPath(localMediaTable.getCutPath());
+                localMedia.setDuration(localMediaTable.getDuration());
+                localMedia.setChecked(localMediaTable.isChecked());
+                localMedia.setCut(localMediaTable.isCut());
+                localMedia.setPosition(localMediaTable.getPosition());
+                localMedia.setNum(localMediaTable.getNum());
+                localMedia.setMimeType(localMediaTable.getMimeType());
+                localMedia.setPictureType(localMediaTable.getPictureType());
+                localMedia.setCompressed(localMediaTable.isCompressed());
+                localMedia.setWidth(localMediaTable.getWidth());
+                localMedia.setHeight(localMediaTable.getHeight());
+                localMediaList.add(localMedia);
+            }
+        }
+        return localMediaList;
+    }
+
+    private SettingsTable getSettingsTable(SettingsTransfer settingsTransfer) {
+        SettingsTable settingsTable = new SettingsTable();
+        if (settingsTransfer != null) {
+            settingsTable.setMouldLandscapeMode(settingsTransfer.getMouldLandscapeMode());
+            settingsTable.setMouldPortraitMode(settingsTransfer.getMouldPortraitMode());
+            settingsTable.setSubTitle(settingsTransfer.getSubTitle());
+        }
+        return settingsTable;
+    }
+
+    private SettingsTransfer getSettingsTransfer(SettingsTable settingsTable) {
+        SettingsTransfer settingsTransfer = new SettingsTransfer();
+        if (settingsTable != null) {
+            settingsTransfer.setMouldLandscapeMode(settingsTable.getMouldLandscapeMode());
+            settingsTransfer.setMouldPortraitMode(settingsTable.getMouldPortraitMode());
+            settingsTransfer.setSubTitle(settingsTable.getSubTitle());
+        }
+        return settingsTransfer;
     }
 
 
@@ -387,12 +498,36 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.program_edit_fab_save:
                 mFabMenu.toggle();
-                saveProgram();
+                popupSaveDialog();
                 Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
         }
+    }
+
+    private void popupSaveDialog() {
+        final EditText nameEdit = new EditText(this);
+        String titleStr = getResources().getString(R.string.input_name_dialog_title);
+        final String errorTipsStr = getResources().getString(R.string.input_name_dialog_error_tips);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(titleStr)
+                .setView(nameEdit)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String nameStr = nameEdit.getText().toString();
+                        if ((nameStr != null) && (!nameStr.trim().isEmpty())) {
+//                            Toast.makeText(ProgramEditActivity.this, nameStr, Toast.LENGTH_SHORT).show();
+                            saveProgram(nameStr, mouldImageId, mouldPosition, mFragments, mSettingsTransfer);
+                        } else {
+                            Toast.makeText(ProgramEditActivity.this, errorTipsStr, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("cancel", null)
+                .setCancelable(false);
+        builder.show();
     }
 
 

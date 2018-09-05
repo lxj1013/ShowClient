@@ -36,17 +36,20 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHold
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.program_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
-        holder.mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Log.e(TAG, "onClick: " + position);
-                Log.e(TAG, "onClick: " + "size = " + getItemCount());
-                Program program = mProgramList.get(position);
-                Log.e(TAG, "onClick: position = " + position + "   " + program.getProgramName());
-                Toast.makeText(mContext, "position = " + position + "   " + program.getProgramName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (mItemClickListener != null) {
+            holder.mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = holder.getAdapterPosition();
+                    mItemClickListener.onItemClick(position, v);
+//                    Log.e(TAG, "onClick: " + position);
+//                    Log.e(TAG, "onClick: " + "size = " + getItemCount());
+//                    Program program = mProgramList.get(position);
+//                    Log.e(TAG, "onClick: position = " + position + "   " + program.getProgramName());
+//                    Toast.makeText(mContext, "position = " + position + "   " + program.getProgramName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         return holder;
     }
 
@@ -76,4 +79,15 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ViewHold
             mProgramNameTv = itemView.findViewById(R.id.program_name);
         }
     }
+
+    private OnItemClickListener mItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, View v);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mItemClickListener = listener;
+    }
+
 }

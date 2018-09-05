@@ -43,15 +43,18 @@ public class ProgramFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new ProgramAdapter(mProgramList);
         recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new ProgramAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+
+            }
+        });
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-
-
     }
 
     private void initPrograms() {
