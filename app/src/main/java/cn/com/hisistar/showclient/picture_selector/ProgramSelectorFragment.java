@@ -41,6 +41,8 @@ public class ProgramSelectorFragment extends Fragment {
     private int pictureMimeType = 0;
 
     private List<LocalMedia> selectList = new ArrayList<>();
+    private List<LocalMedia> oldSelectList = new ArrayList<>();
+    private List<LocalMedia> newSelectList = new ArrayList<>();
 
     private String screenPath;
 
@@ -73,11 +75,10 @@ public class ProgramSelectorFragment extends Fragment {
 //                    .showCropFrame(false)
 //                    .showCropGrid(false)
                     .openClickSound(true)
-                    .selectionMedia(selectList)
+                    .selectionMedia(newSelectList)
                     .forResult(PictureConfig.CHOOSE_REQUEST);
         }
     };
-
 
 
     @Nullable
@@ -92,6 +93,9 @@ public class ProgramSelectorFragment extends Fragment {
     private void init() {
         FullyGridLayoutManager manager = new FullyGridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+        selectList.clear();
+        selectList.addAll(oldSelectList);
+        selectList.addAll(newSelectList);
         adapter = new GridImageAdapter(getActivity(), onAddPicClickListener);
         adapter.setList(selectList);
         adapter.setSelectMax(MAX_SELECT_NUM);
@@ -106,7 +110,7 @@ public class ProgramSelectorFragment extends Fragment {
                     switch (mediaType) {
                         case 1:
                             // 预览图片 可自定长按保存路径
-                            //PictureSelector.create(MainActivity.this).themeStyle(themeId).externalPicturePreview(position, "/custom_file", selectList);
+                            //PictureSelector.create(MainActivity.this).themeStyle(themeId).externalPicturePreview(position, "/custom_file", newSelectList);
                             PictureSelector.create(getActivity()).themeStyle(THEME_ID).openExternalPreview(position, selectList);
                             break;
                         case 2:
@@ -130,10 +134,11 @@ public class ProgramSelectorFragment extends Fragment {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择
-                    selectList = PictureSelector.obtainMultipleResult(data);
-                    for (int i = 0; i < selectList.size(); i++)
-                        Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
-                    adapter.setList(selectList);
+                    newSelectList = PictureSelector.obtainMultipleResult(data);
+                    for (int i = 0; i < newSelectList.size(); i++)
+                        Log.e(TAG, "onActivityResult: " + newSelectList.get(i).getPath());
+
+                    adapter.setList(getSelectList());
                     adapter.notifyDataSetChanged();
                     break;
             }
@@ -149,11 +154,26 @@ public class ProgramSelectorFragment extends Fragment {
     }
 
     public List<LocalMedia> getSelectList() {
+        selectList.clear();
+        selectList.addAll(oldSelectList);
+        selectList.addAll(newSelectList);
         return selectList;
     }
 
-    public void setSelectList(List<LocalMedia> selectList) {
-        this.selectList = selectList;
+    public List<LocalMedia> getOldSelectList() {
+        return oldSelectList;
+    }
+
+    public void setOldSelectList(List<LocalMedia> oldSelectList) {
+        this.oldSelectList = oldSelectList;
+    }
+
+    public List<LocalMedia> getNewSelectList() {
+        return newSelectList;
+    }
+
+    public void setNewSelectList(List<LocalMedia> newSelectList) {
+        this.newSelectList = newSelectList;
     }
 
     public String getScreenPath() {

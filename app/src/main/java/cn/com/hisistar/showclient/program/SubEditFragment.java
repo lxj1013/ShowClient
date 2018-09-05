@@ -25,7 +25,12 @@ public class SubEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sub_edit_fragment, container, false);
         mSubEditText = view.findViewById(R.id.program_edit_sub_ev);
+        mSubEditText.setText(mSubtitle);
         return view;
+    }
+
+    public void setSubtitle(String subtitle) {
+        mSubtitle = subtitle;
     }
 
     public String getSubtitle() {

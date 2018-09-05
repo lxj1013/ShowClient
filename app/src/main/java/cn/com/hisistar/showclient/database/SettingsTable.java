@@ -40,7 +40,7 @@ public class SettingsTable extends LitePalSupport {
 
     @Override
     public String toString() {
-        return "SettingsTransfer{" +
+        return "SettingsTable{" +
                 "mouldLandscapeMode=" + mouldLandscapeMode +
                 ", mouldPortraitMode=" + mouldPortraitMode +
                 ", subTitle='" + subTitle + '\'' +

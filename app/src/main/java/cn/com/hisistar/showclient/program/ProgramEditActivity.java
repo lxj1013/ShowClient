@@ -35,6 +35,8 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 
+import org.litepal.LitePal;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -65,12 +67,18 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
     private ArrayList<String> mTitleList = new ArrayList<>();
     private ArrayList<Fragment> mFragments = new ArrayList<>();
 
-    private SettingsTransfer mSettingsTransfer;
+    private List<LocalMedia> mainList = new ArrayList<>();
+    private List<LocalMedia> listTwo = new ArrayList<>();
+    private List<LocalMedia> listThree = new ArrayList<>();
+    private List<LocalMedia> listFour = new ArrayList<>();
+    private List<LocalMedia> musicList = new ArrayList<>();
+    private SettingsTransfer mSettingsTransfer = new SettingsTransfer();
 
     private FloatingActionsMenu mFabMenu;
     private FloatingActionButton mFabSend;
     private FloatingActionButton mFabSave;
 
+    private int programId;
     private int mouldImageId;
     private int mouldPosition;
 
@@ -89,6 +97,16 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
     private void init() {
         Intent intent = getIntent();
         String mouldName = intent.getStringExtra(MouldChooseFragment.MOULD_NAME);
+        programId = intent.getIntExtra(ProgramFragment.PROGRAM_TABLE_ID, 0);
+        if (programId != 0) {
+            ProgramTable programTable = LitePal.find(ProgramTable.class, programId);
+            mainList = getLocalMediaList(programTable.getMainList());
+            listTwo = getLocalMediaList(programTable.getListTwo());
+            listThree = getLocalMediaList(programTable.getListThree());
+            listFour = getLocalMediaList(programTable.getListFour());
+            musicList = getLocalMediaList(programTable.getMusicList());
+            mSettingsTransfer = getSettingsTransfer(programTable.getSettings());
+        }
         mouldImageId = intent.getIntExtra(MouldChooseFragment.MOULD_IMAGE_ID, 0);
         Toolbar toolbar = findViewById(R.id.program_edit_toolbar);
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.program_edit_coll_toolbar);
@@ -110,7 +128,6 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         mouldPosition = intent.getIntExtra(MouldChooseFragment.MOULD_POSITION, 0);
         Log.e(TAG, "init: mouldPosition=" + mouldPosition);
 
-        mSettingsTransfer = new SettingsTransfer();
         switch (mouldPosition) {
             case 0:
                 mSettingsTransfer.setMouldLandscapeMode(1);
@@ -145,6 +162,7 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         mFragments.clear();
         ProgramSelectorFragment fragment;
         fragment = new ProgramSelectorFragment();
+        fragment.setOldSelectList(mainList);
         fragment.setScreenPath("/histarProgram/mainScreen");
         fragment.setPictureMimeType(PictureConfig.TYPE_ALL);
         mFragments.add(fragment);
@@ -154,11 +172,6 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
                 mTitleList.add(getResources().getString(R.string.program_screen_main));
                 mTitleList.add(getResources().getString(R.string.program_music));
                 mTitleList.add(getResources().getString(R.string.program_subtitle));
-                fragment = new ProgramSelectorFragment();
-                fragment.setScreenPath("/histarProgram/musicProgram");
-                fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
-                mFragments.add(fragment);
-                mFragments.add(new SubEditFragment());
                 break;
             case 1:
                 mTitleList.add(getResources().getString(R.string.program_screen_main));
@@ -166,14 +179,10 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
                 mTitleList.add(getResources().getString(R.string.program_music));
                 mTitleList.add(getResources().getString(R.string.program_subtitle));
                 fragment = new ProgramSelectorFragment();
+                fragment.setOldSelectList(listTwo);
                 fragment.setScreenPath("/histarProgram/screenTwo");
                 fragment.setPictureMimeType(PictureConfig.TYPE_IMAGE);
                 mFragments.add(fragment);
-                fragment = new ProgramSelectorFragment();
-                fragment.setScreenPath("/histarProgram/musicProgram");
-                fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
-                mFragments.add(fragment);
-                mFragments.add(new SubEditFragment());
                 break;
             case 2:
             case 3:
@@ -185,18 +194,15 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
                 mTitleList.add(getResources().getString(R.string.program_music));
                 mTitleList.add(getResources().getString(R.string.program_subtitle));
                 fragment = new ProgramSelectorFragment();
+                fragment.setOldSelectList(listTwo);
                 fragment.setScreenPath("/histarProgram/screenTwo");
                 fragment.setPictureMimeType(PictureConfig.TYPE_IMAGE);
                 mFragments.add(fragment);
                 fragment = new ProgramSelectorFragment();
+                fragment.setOldSelectList(listThree);
                 fragment.setScreenPath("/histarProgram/screenThree");
                 fragment.setPictureMimeType(PictureConfig.TYPE_IMAGE);
                 mFragments.add(fragment);
-                fragment = new ProgramSelectorFragment();
-                fragment.setScreenPath("/histarProgram/musicProgram");
-                fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
-                mFragments.add(fragment);
-                mFragments.add(new SubEditFragment());
                 break;
             case 7:
                 mTitleList.add(getResources().getString(R.string.program_screen_main));
@@ -206,28 +212,33 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
                 mTitleList.add(getResources().getString(R.string.program_music));
                 mTitleList.add(getResources().getString(R.string.program_subtitle));
                 fragment = new ProgramSelectorFragment();
+                fragment.setOldSelectList(listTwo);
                 fragment.setScreenPath("/histarProgram/screenTwo");
                 fragment.setPictureMimeType(PictureConfig.TYPE_IMAGE);
                 mFragments.add(fragment);
                 fragment = new ProgramSelectorFragment();
+                fragment.setOldSelectList(listThree);
                 fragment.setScreenPath("/histarProgram/screenTree");
                 fragment.setPictureMimeType(PictureConfig.TYPE_IMAGE);
                 mFragments.add(fragment);
                 fragment = new ProgramSelectorFragment();
+                fragment.setOldSelectList(listFour);
                 fragment.setScreenPath("/histarProgram/screenFour");
                 fragment.setPictureMimeType(PictureConfig.TYPE_IMAGE);
                 mFragments.add(fragment);
-                fragment = new ProgramSelectorFragment();
-                fragment.setScreenPath("/histarProgram/musicProgram");
-                fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
-                mFragments.add(fragment);
-                mFragments.add(new SubEditFragment());
                 break;
             default:
                 Log.e(TAG, "onItemClick: " + "error!");
                 break;
         }
-
+        fragment = new ProgramSelectorFragment();
+        fragment.setOldSelectList(musicList);
+        fragment.setScreenPath("/histarProgram/musicProgram");
+        fragment.setPictureMimeType(PictureConfig.TYPE_AUDIO);
+        mFragments.add(fragment);
+        SubEditFragment subEditFragment = new SubEditFragment();
+        subEditFragment.setSubtitle(mSettingsTransfer.getSubTitle());
+        mFragments.add(subEditFragment);
 
         mViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), mTitleList, mFragments);
 
@@ -368,6 +379,8 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         programTable.setMouldPosition(mouldPosition);
         programTable.save();
 
+        LitePal.delete(ProgramTable.class, programId);
+
     }
 
     private List<LocalMediaTable> getLocalMediaTableList(List<LocalMedia> localMediaList, String screen) {
@@ -397,7 +410,6 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         return localMediaTableList;
     }
 
-
     private List<LocalMedia> getLocalMediaList(List<LocalMediaTable> localMediaTableList) {
         List<LocalMedia> localMediaList = new ArrayList<>();
         LocalMediaTable localMediaTable;
@@ -425,6 +437,7 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         return localMediaList;
     }
 
+
     private SettingsTable getSettingsTable(SettingsTransfer settingsTransfer) {
         SettingsTable settingsTable = new SettingsTable();
         if (settingsTransfer != null) {
@@ -444,7 +457,6 @@ public class ProgramEditActivity extends AppCompatActivity implements View.OnCli
         }
         return settingsTransfer;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

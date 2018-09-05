@@ -56,7 +56,7 @@ public class ProgramTable extends LitePalSupport {
     }
 
     public List<LocalMediaTable> getMainList() {
-        return LitePal.where("program_id=? and screen=?", String.valueOf(id), "main").find(LocalMediaTable.class);
+        return LitePal.where("programtable_id=? and screen=?", String.valueOf(id), "main").find(LocalMediaTable.class);
     }
 
     public void setMainList(List<LocalMediaTable> mainList) {
@@ -67,7 +67,7 @@ public class ProgramTable extends LitePalSupport {
     }
 
     public List<LocalMediaTable> getListTwo() {
-        return LitePal.where("program_id=? and screen=?", String.valueOf(id), "two").find(LocalMediaTable.class);
+        return LitePal.where("programtable_id=? and screen=?", String.valueOf(id), "two").find(LocalMediaTable.class);
     }
 
     public void setListTwo(List<LocalMediaTable> listTwo) {
@@ -78,7 +78,7 @@ public class ProgramTable extends LitePalSupport {
     }
 
     public List<LocalMediaTable> getListThree() {
-        return LitePal.where("program_id=? and screen=?", String.valueOf(id), "three").find(LocalMediaTable.class);
+        return LitePal.where("programtable_id=? and screen=?", String.valueOf(id), "three").find(LocalMediaTable.class);
     }
 
     public void setListThree(List<LocalMediaTable> listThree) {
@@ -89,7 +89,7 @@ public class ProgramTable extends LitePalSupport {
     }
 
     public List<LocalMediaTable> getListFour() {
-        return LitePal.where("program_id=? and screen=?", String.valueOf(id), "four").find(LocalMediaTable.class);
+        return LitePal.where("programtable_id=? and screen=?", String.valueOf(id), "four").find(LocalMediaTable.class);
     }
 
     public void setListFour(List<LocalMediaTable> listFour) {
@@ -100,7 +100,7 @@ public class ProgramTable extends LitePalSupport {
     }
 
     public List<LocalMediaTable> getMusicList() {
-        return LitePal.where("program_id=? and screen=?", String.valueOf(id), "music").find(LocalMediaTable.class);
+        return LitePal.where("programtable_id=? and screen=?", String.valueOf(id), "music").find(LocalMediaTable.class);
     }
 
     public void setMusicList(List<LocalMediaTable> musicList) {
