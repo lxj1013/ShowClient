@@ -188,6 +188,7 @@ public class ProgressDialogActivity extends AppCompatActivity {
         if (mFileSendService != null) {
             mFileSendService.setSendProgressChangListener(null);
             mFileSendService = null;
+            stopService(new Intent(ProgressDialogActivity.this,FileSendService.class));
             unbindService(mServiceConnection);
         }
     }

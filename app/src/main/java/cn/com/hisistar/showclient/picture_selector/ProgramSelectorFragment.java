@@ -75,7 +75,7 @@ public class ProgramSelectorFragment extends Fragment {
 //                    .showCropFrame(false)
 //                    .showCropGrid(false)
                     .openClickSound(true)
-                    .selectionMedia(newSelectList)
+                    .selectionMedia(selectList)
                     .forResult(PictureConfig.CHOOSE_REQUEST);
         }
     };
@@ -91,11 +91,12 @@ public class ProgramSelectorFragment extends Fragment {
     }
 
     private void init() {
+        Log.e(TAG, "init: ");
         FullyGridLayoutManager manager = new FullyGridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-        selectList.clear();
-        selectList.addAll(oldSelectList);
-        selectList.addAll(newSelectList);
+//        selectList.clear();
+//        selectList.addAll(oldSelectList);
+//        selectList.addAll(newSelectList);
         adapter = new GridImageAdapter(getActivity(), onAddPicClickListener);
         adapter.setList(selectList);
         adapter.setSelectMax(MAX_SELECT_NUM);
@@ -134,9 +135,9 @@ public class ProgramSelectorFragment extends Fragment {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择
-                    newSelectList = PictureSelector.obtainMultipleResult(data);
-                    for (int i = 0; i < newSelectList.size(); i++)
-                        Log.e(TAG, "onActivityResult: " + newSelectList.get(i).getPath());
+                    selectList = PictureSelector.obtainMultipleResult(data);
+                    for (int i = 0; i < selectList.size(); i++)
+                        Log.e(TAG, "onActivityResult: " + selectList.get(i).getPath());
 
                     adapter.setList(getSelectList());
                     adapter.notifyDataSetChanged();
@@ -154,9 +155,9 @@ public class ProgramSelectorFragment extends Fragment {
     }
 
     public List<LocalMedia> getSelectList() {
-        selectList.clear();
-        selectList.addAll(oldSelectList);
-        selectList.addAll(newSelectList);
+//        selectList.clear();
+//        selectList.addAll(oldSelectList);
+//        selectList.addAll(newSelectList);
         return selectList;
     }
 
@@ -166,6 +167,7 @@ public class ProgramSelectorFragment extends Fragment {
 
     public void setOldSelectList(List<LocalMedia> oldSelectList) {
         this.oldSelectList = oldSelectList;
+        selectList.addAll(oldSelectList);
     }
 
     public List<LocalMedia> getNewSelectList() {
